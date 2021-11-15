@@ -1,0 +1,35 @@
+.error-alert {
+  max-width: 300px;
+  position: fixed;
+  left: 15px;
+  bottom: 15px;
+  padding: 30px;
+  border-radius: 5px;
+  background-color: #170202;
+  border: 1px solid #310505;
+  z-index: 5;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}
+
+.error-alert__close-btn {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  font-size: 19px;
+  padding: 10px 5px;
+  line-height: 0;
+  appearance: none;
+  background: none;
+  border: none;
+  color: #c9b37e;
+  cursor: pointer;
+}
+
+.error-alert__close-btn:hover {
+  color: #a39166;
+}
+
+.error-alert__message {
+  margin: 0;
+  color: #c9b37e;
+}
