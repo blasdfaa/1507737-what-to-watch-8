@@ -12,11 +12,11 @@ import { fetchAllMovies, selectGenre } from '../../redux/movie/movie.slice';
 import {
   filteredMoviesByGenreSelector,
   getAllMoviesItems,
-  getMoviesDataStatus,
-  getSelectedGenre,
+  getMoviesFetchStatus,
+  getSelectedGenre
 } from '../../redux/movie/movie.selector';
 import MoviesList from '../../components/movies-list/movies-list';
-import { getPromoMovie, getPromoMovieLoadingStatus } from '../../redux/promo-movie/promo-movie.selector';
+import { getPromoMovie, getPromoMovieFetchStatus } from '../../redux/promo-movie/promo-movie.selector';
 import { fetchPromoMovie } from '../../redux/promo-movie/promo-movie.slice';
 
 import type { Movie, MovieGenre } from '../../types/movie';
@@ -28,8 +28,8 @@ function MainPage(): JSX.Element {
   const dispatch = useAppDispatch();
 
   const currentGenre = useAppSelector(getSelectedGenre);
-  const allMoviesFetchStatus = useAppSelector(getMoviesDataStatus);
-  const promoMovieLoadingStatus = useAppSelector(getPromoMovieLoadingStatus);
+  const allMoviesFetchStatus = useAppSelector(getMoviesFetchStatus);
+  const promoMovieLoadingStatus = useAppSelector(getPromoMovieFetchStatus);
   const moviesData = useAppSelector(getAllMoviesItems);
   const filteredMovies = useAppSelector(filteredMoviesByGenreSelector);
   const promoMovie = useAppSelector(getPromoMovie);
@@ -64,8 +64,8 @@ function MainPage(): JSX.Element {
     setMoviesToShow((prevState) => prevState + SHOWED_MOVIES_STEP);
   };
 
-  const showedMovies = movies.slice(0, moviesToShow);
-  const allMoviesShowed = moviesToShow >= movies.length;
+  const showedMoviesCount = movies.slice(0, moviesToShow);
+  const isAllMoviesShowed = moviesToShow >= movies.length;
 
   return (
     <>
@@ -85,9 +85,9 @@ function MainPage(): JSX.Element {
         <section className="catalog">
           <h2 className="catalog__title visually-hidden">Catalog</h2>
           <GenresBar selectedGenre={currentGenre} onGenreClick={handleChangeGenre} />
-          <MoviesList movies={showedMovies} />
+          <MoviesList movies={showedMoviesCount} />
           <div className="catalog__more">
-            {!allMoviesShowed && (
+            {!isAllMoviesShowed && (
               <button className="catalog__button" type="button" onClick={handleShowMoreBtn}>
                 Show more
               </button>

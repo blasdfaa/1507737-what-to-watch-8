@@ -1,6 +1,6 @@
-type UseParams = {
-  id: string;
-};
+// type UseParams = {
+//   id: string;
+// };
 
 function MoviePage(): JSX.Element {
   return <div></div>;

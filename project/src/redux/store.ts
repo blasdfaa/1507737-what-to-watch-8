@@ -21,7 +21,7 @@ const store = configureStore({
     }).concat(redirect),
 });
 
-export type RootState = typeof store.getState;
+export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
 export default store;

@@ -1,5 +1,9 @@
+import { ApiDataStatus } from '../../const';
 import useAppDispatch from '../../hooks/use-app-dispatch';
-import { toggleFavoriteStatus, updateMovie } from '../../redux/movie/movie.slice';
+import useAppSelector from '../../hooks/use-app-selector';
+import { getFavoriteToggleStatus } from '../../redux/movie/movie.selector';
+import { toggleFavoriteStatus } from '../../redux/movie/movie.slice';
+
 import { Movie } from '../../types/movie';
 
 type MovieControlsProps = {
@@ -11,11 +15,16 @@ type MovieControlsProps = {
 function MovieControls({ movie, full, onPlayBtnClick }: MovieControlsProps): JSX.Element {
   const dispatch = useAppDispatch();
 
+  const favoriteMovieToggleStatus = useAppSelector(getFavoriteToggleStatus);
+
   const handleChangeFavoriteStatus = () => {
     if (movie) {
       dispatch(toggleFavoriteStatus(movie));
     }
   };
+
+  const isMovieFavorite = movie && movie.isFavorite;
+  const isLoadingToggleStatus = favoriteMovieToggleStatus === ApiDataStatus.Loading;
 
   return (
     <div className="film-card__buttons">
@@ -26,9 +35,11 @@ function MovieControls({ movie, full, onPlayBtnClick }: MovieControlsProps): JSX
         <span>Play</span>
       </button>
       <button className="btn btn--list film-card__button" type="button" onClick={handleChangeFavoriteStatus}>
-        {/* <svg viewBox="0 0 19 20" width="19" height="20">
-          <use xlinkHref={`#${inMyList ? 'in-list' : 'add'}`} />
-        </svg> */}
+        <svg viewBox="0 0 19 20" width="19" height="20">
+          {isMovieFavorite && !isLoadingToggleStatus && <use xlinkHref="#in-list" />}
+          {!isMovieFavorite && !isLoadingToggleStatus && <use xlinkHref="#add" />}
+          {isLoadingToggleStatus && <use xlinkHref="#btn-loader" />}
+        </svg>
         <span>My list</span>
       </button>
       {full && (

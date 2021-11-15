@@ -87,7 +87,7 @@ export const movieSlice = createSlice({
         state.toggleFavoriteStatus = ApiDataStatus.Idle;
       })
       .addCase(toggleFavoriteStatus.rejected, (state) => {
-        state.toggleFavoriteStatus = ApiDataStatus.Failed;
+        state.toggleFavoriteStatus = ApiDataStatus.Idle;
       });
   },
 });
