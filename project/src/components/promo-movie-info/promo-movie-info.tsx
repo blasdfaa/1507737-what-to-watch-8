@@ -22,7 +22,10 @@ function PromoMovieInfo({ movie, full }: PromoMovieInfoProps): JSX.Element {
   });
 
   const handlePlayBtnClick = () => {
-    history.push(`/player/${movie?.id}`);
+    history.push({
+      pathname: `/player/${movie?.id}`,
+      state: { videoSource: movie?.videoLink, videoPoster: movie?.posterImage, videoName: movie?.title },
+    });
   };
 
   return (

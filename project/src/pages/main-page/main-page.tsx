@@ -6,14 +6,14 @@ import GenresBar from '../../components/genres-bar/genres-bar';
 import UserBlock from '../../components/user-block/user-block';
 import AppFooter from '../../components/app-footer/app-footer';
 import PromoMovieInfo from '../../components/promo-movie-info/promo-movie-info';
-import useAppSelector from '../../hooks/use-app-selector';
-import useAppDispatch from '../../hooks/use-app-dispatch';
+import useTypedSelector from '../../hooks/use-typed-selector';
+import useTypedDispatch from '../../hooks/use-typed-dispatch';
 import { fetchAllMovies, selectGenre } from '../../redux/movie/movie.slice';
 import {
   filteredMoviesByGenreSelector,
   getAllMoviesItems,
   getMoviesFetchStatus,
-  getSelectedGenre
+  getSelectedGenre,
 } from '../../redux/movie/movie.selector';
 import MoviesList from '../../components/movies-list/movies-list';
 import { getPromoMovie, getPromoMovieFetchStatus } from '../../redux/promo-movie/promo-movie.selector';
@@ -25,14 +25,14 @@ const INITIAL_SHOWED_MOVIES_COUNT = 8;
 const SHOWED_MOVIES_STEP = 8;
 
 function MainPage(): JSX.Element {
-  const dispatch = useAppDispatch();
+  const dispatch = useTypedDispatch();
 
-  const currentGenre = useAppSelector(getSelectedGenre);
-  const allMoviesFetchStatus = useAppSelector(getMoviesFetchStatus);
-  const promoMovieLoadingStatus = useAppSelector(getPromoMovieFetchStatus);
-  const moviesData = useAppSelector(getAllMoviesItems);
-  const filteredMovies = useAppSelector(filteredMoviesByGenreSelector);
-  const promoMovie = useAppSelector(getPromoMovie);
+  const currentGenre = useTypedSelector(getSelectedGenre);
+  const allMoviesFetchStatus = useTypedSelector(getMoviesFetchStatus);
+  const promoMovieLoadingStatus = useTypedSelector(getPromoMovieFetchStatus);
+  const moviesData = useTypedSelector(getAllMoviesItems);
+  const filteredMovies = useTypedSelector(filteredMoviesByGenreSelector);
+  const promoMovie = useTypedSelector(getPromoMovie);
 
   const [movies, setMovies] = React.useState<Movie[]>([]);
   const [moviesToShow, setMoviesToShow] = React.useState<number>(INITIAL_SHOWED_MOVIES_COUNT);

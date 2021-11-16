@@ -1,6 +1,6 @@
 import { ApiDataStatus } from '../../const';
-import useAppDispatch from '../../hooks/use-app-dispatch';
-import useAppSelector from '../../hooks/use-app-selector';
+import useTypedDispatch from '../../hooks/use-typed-dispatch';
+import useTypedSelector from '../../hooks/use-typed-selector';
 import { getFavoriteToggleStatus } from '../../redux/movie/movie.selector';
 import { toggleFavoriteStatus } from '../../redux/movie/movie.slice';
 
@@ -13,9 +13,9 @@ type MovieControlsProps = {
 };
 
 function MovieControls({ movie, full, onPlayBtnClick }: MovieControlsProps): JSX.Element {
-  const dispatch = useAppDispatch();
+  const dispatch = useTypedDispatch();
 
-  const favoriteMovieToggleStatus = useAppSelector(getFavoriteToggleStatus);
+  const favoriteMovieToggleStatus = useTypedSelector(getFavoriteToggleStatus);
 
   const handleChangeFavoriteStatus = () => {
     if (movie) {

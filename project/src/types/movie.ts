@@ -26,13 +26,10 @@ export type MovieCard = {
   previewImage: string;
 };
 
-export type PromoMovie = {
-  id: number;
-  title: string;
-  posterImage: string;
-  backgroundImage: string;
-  genre: string;
-  releasedYear: number;
+export type videoPlayerState = {
+  isPlaying: boolean;
+  isFullScreen: boolean;
+  progress: number;
 };
 
 export type MovieGenre = typeof genresNames[number];

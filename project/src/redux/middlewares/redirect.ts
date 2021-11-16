@@ -2,9 +2,9 @@ import { Middleware } from 'redux';
 
 import { ActionType } from '../../const';
 import browserHistory from '../../services/browser-history';
-import { RootReducer } from '../rootReducer';
+import type { RootState } from '../store';
 
-export const redirect: Middleware<unknown, RootReducer> = (_store) => (next) => (action) => {
+export const redirect: Middleware = (_store) => (next) => (action) => {
   const history = browserHistory;
 
   if (action.type === ActionType.RedirectToRoute) {
