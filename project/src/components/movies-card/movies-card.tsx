@@ -7,6 +7,7 @@ import type { MovieCard } from '../../types/movie';
 
 function MoviesCard({ id, title, previewImage, previewVideoLink }: MovieCard): JSX.Element {
   const [isHovered, setHovered] = React.useState<boolean>(false);
+  const [isPreviewLoading, setIsPreviewLoading] = React.useState(false);
 
   const handleHoverAdd = (): void => {
     setHovered(true);
@@ -24,8 +25,21 @@ function MoviesCard({ id, title, previewImage, previewVideoLink }: MovieCard): J
     >
       <Link to={`${AppRoutes.Movies}/${id}`}>
         <div className="small-film-card__image">
+          {isHovered && isPreviewLoading && (
+            <svg className="small-film-card__preview-loader" viewBox="0 0 19 20" width="19" height="20">
+              <use xlinkHref="#btn-loader" />
+            </svg>
+          )}
           {isHovered && (
-            <video preload="auto" width="280" height="175" muted loop autoPlay>
+            <video
+              width="280"
+              height="175"
+              onLoadStart={() => setIsPreviewLoading(true)}
+              onCanPlayThrough={() => setIsPreviewLoading(false)}
+              muted
+              loop
+              autoPlay
+            >
               <source src={previewVideoLink}></source>
             </video>
           )}

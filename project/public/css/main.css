@@ -1577,6 +1577,13 @@ main {
   background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 0.63) 97%);
 }
 
+.small-film-card__preview-loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .small-film-card__title {
   position: absolute;
   z-index: 2;
