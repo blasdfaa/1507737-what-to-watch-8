@@ -14,9 +14,14 @@ function MoviesList(props: MoviesListProps): JSX.Element {
   return (
     <div className="catalog__films-list">
       {movies &&
-        movies.map(({ id, title, previewImage }) => (
+        movies.map(({ id, title, previewImage, previewVideoLink }) => (
           <React.Fragment key={id}>
-            <MoviesCard id={id} title={title} previewImage={previewImage} />
+            <MoviesCard
+              id={id}
+              title={title}
+              previewImage={previewImage}
+              previewVideoLink={previewVideoLink}
+            />
           </React.Fragment>
         ))}
     </div>

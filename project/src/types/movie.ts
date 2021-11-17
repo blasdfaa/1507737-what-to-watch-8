@@ -24,6 +24,7 @@ export type MovieCard = {
   id: number;
   title: string;
   previewImage: string;
+  previewVideoLink: string;
 };
 
 export type videoPlayerState = {
