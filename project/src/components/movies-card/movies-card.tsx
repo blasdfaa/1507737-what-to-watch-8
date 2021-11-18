@@ -40,7 +40,7 @@ function MoviesCard({ id, title, previewImage, previewVideoLink }: MovieCard): J
               loop
               autoPlay
             >
-              <source src={previewVideoLink}></source>
+              <source src={previewVideoLink} type="video/mp4"></source>
             </video>
           )}
           {!isHovered && (

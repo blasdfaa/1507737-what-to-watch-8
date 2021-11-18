@@ -18,8 +18,15 @@ function PlayerPage(): JSX.Element {
 
   const { videoSource, videoPoster, videoName } = history.location.state as RouteStateType;
 
-  const [isPlaying, timeProgress, togglePlay, toggleFullscreen, handleOnTimeUpdate, handleVideoProgress] =
-    useVideoPlayer(playerRef, videoRef, controlRef);
+  const {
+    isPlaying,
+    timeProgress,
+    remainingVideoTime,
+    togglePlay,
+    toggleFullscreen,
+    handleOnTimeUpdate,
+    handleVideoProgress,
+  } = useVideoPlayer(playerRef, videoRef, controlRef);
 
   const handleExitPlayer = (): void => {
     history.goBack();
@@ -27,13 +34,9 @@ function PlayerPage(): JSX.Element {
 
   return (
     <div className="player" ref={playerRef}>
-      <video
-        ref={videoRef}
-        src={videoSource}
-        onTimeUpdate={handleOnTimeUpdate}
-        className="player__video"
-        poster={videoPoster}
-      />
+      <video className="player__video" ref={videoRef} poster={videoPoster} onTimeUpdate={handleOnTimeUpdate}>
+        <source src={videoSource} />
+      </video>
 
       <button type="button" className="player__exit" onClick={handleExitPlayer}>
         Exit
@@ -57,7 +60,7 @@ function PlayerPage(): JSX.Element {
               />
             </div>
           </div>
-          <div className="player__time-value">1:30:29</div>
+          <div className="player__time-value">{remainingVideoTime}</div>
         </div>
 
         <div className="player__controls-row">

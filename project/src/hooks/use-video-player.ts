@@ -1,15 +1,28 @@
 import React from 'react';
+import dayjs from 'dayjs';
+import durationPlugin from 'dayjs/plugin/duration';
 
 import useFullscreenStatus from './use-fullscreen-status';
 
-type ReturnType = [
-  isPlaying: boolean,
-  timeProgress: number,
-  togglePlay: () => void,
-  toggleFullscreen: () => void,
-  handleOnTimeUpdate: () => void,
-  handleVideoProgress: (e: React.ChangeEvent<HTMLInputElement>) => void,
-];
+dayjs.extend(durationPlugin);
+
+const SECONDS_IN_HOUR = 3600;
+
+const getRemainingVideoTime = (current: number, duration: number): string => {
+  const remainingTime = dayjs.duration(duration - current, 's');
+
+  return duration > SECONDS_IN_HOUR ? remainingTime.format('HH:mm:ss') : remainingTime.format('mm:ss');
+};
+
+type ReturnType = {
+  isPlaying: boolean;
+  timeProgress: number;
+  remainingVideoTime: string;
+  togglePlay: () => void;
+  toggleFullscreen: () => void;
+  handleOnTimeUpdate: () => void;
+  handleVideoProgress: (e: React.ChangeEvent<HTMLInputElement>) => void;
+};
 
 const useVideoPlayer = (
   playerElementRef: React.RefObject<HTMLDivElement | null>,
@@ -18,15 +31,22 @@ const useVideoPlayer = (
 ): ReturnType => {
   const [isPlaying, setPlaying] = React.useState<boolean>(false);
   const [timeProgress, setTimeProgress] = React.useState<number>(0);
+  const [videoTime, setVideoTime] = React.useState<number>(0);
+  const [currentVideoTime, setСurrentVideoTime] = React.useState<number>(0);
 
   const [isFullScreen, setFullScreen] = useFullscreenStatus(playerElementRef);
 
   React.useEffect(() => {
-    isPlaying ? videoElementRef.current?.play() : videoElementRef.current?.pause();
+    if (videoElementRef.current !== null) {
+      isPlaying ? videoElementRef.current.play() : videoElementRef.current.pause();
+    }
   }, [videoElementRef, isPlaying]);
 
   const togglePlay = (): void => {
-    setPlaying((prevState) => !prevState);
+    if (videoElementRef.current !== null) {
+      setVideoTime(videoElementRef.current.duration);
+      setPlaying((prevState) => !prevState);
+    }
   };
 
   const toggleFullscreen = (): void => {
@@ -37,10 +57,11 @@ const useVideoPlayer = (
     if (videoElementRef.current !== null && progressElementRef.current !== null) {
       const videoElement = videoElementRef.current;
       const progressElement = progressElementRef.current;
-      const progress = (videoElement?.currentTime / videoElement?.duration) * 100;
+      const progress = (videoElement.currentTime / videoTime) * 100;
 
       progressElement.style.backgroundSize = `${progress}% 100%`;
 
+      setСurrentVideoTime(videoElement.currentTime);
       setTimeProgress(progress);
     }
   };
@@ -60,7 +81,17 @@ const useVideoPlayer = (
     }
   };
 
-  return [isPlaying, timeProgress, togglePlay, toggleFullscreen, handleOnTimeUpdate, handleVideoProgress];
+  const remainingVideoTime = getRemainingVideoTime(currentVideoTime, videoTime);
+
+  return {
+    isPlaying,
+    timeProgress,
+    remainingVideoTime,
+    togglePlay,
+    toggleFullscreen,
+    handleOnTimeUpdate,
+    handleVideoProgress,
+  };
 };
 
 export default useVideoPlayer;
