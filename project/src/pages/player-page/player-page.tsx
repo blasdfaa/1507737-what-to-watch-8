@@ -1,22 +1,34 @@
 import React from 'react';
-import { useHistory } from 'react-router';
+import { useHistory, useParams } from 'react-router';
 
+import { ApiDataStatus } from '../../const';
+import useTypedDispatch from '../../hooks/use-typed-dispatch';
+import useTypedSelector from '../../hooks/use-typed-selector';
 import useVideoPlayer from '../../hooks/use-video-player';
+import { getMovie, getMovieFetchStatus } from '../../redux/movie/movie.selector';
+import { fetchMovieById } from '../../redux/movie/movie.slice';
 
-type RouteStateType = {
-  videoSource: string;
-  videoPoster: string;
-  videoName: string;
+type UseParams = {
+  id: string;
 };
 
 function PlayerPage(): JSX.Element {
+  const { id: movieId } = useParams<UseParams>();
   const history = useHistory();
+  const dispatch = useTypedDispatch();
+
+  const movie = useTypedSelector(getMovie);
+  const movieLoadingStatus = useTypedSelector(getMovieFetchStatus);
 
   const playerRef = React.useRef<HTMLDivElement | null>(null);
   const videoRef = React.useRef<HTMLVideoElement | null>(null);
   const controlRef = React.useRef<HTMLInputElement | null>(null);
 
-  const { videoSource, videoPoster, videoName } = history.location.state as RouteStateType;
+  React.useEffect(() => {
+    if (movieLoadingStatus === ApiDataStatus.Idle) {
+      dispatch(fetchMovieById(+movieId));
+    }
+  }, []);
 
   const {
     isPlaying,
@@ -32,10 +44,23 @@ function PlayerPage(): JSX.Element {
     history.goBack();
   };
 
+  const isSourceLoading = movieLoadingStatus === ApiDataStatus.Loading;
+  const isSourceLoaded = movieLoadingStatus === ApiDataStatus.Success;
+
   return (
-    <div className="player" ref={playerRef}>
-      <video className="player__video" ref={videoRef} poster={videoPoster} onTimeUpdate={handleOnTimeUpdate}>
-        <source src={videoSource} />
+    <div className={`player ${isSourceLoading ? 'player--source-loading' : ''}`} ref={playerRef}>
+      {isSourceLoading && (
+        <svg className="player__preloader" viewBox="0 0 19 20" width="70" height="70">
+          <use xlinkHref="#btn-loader" />
+        </svg>
+      )}
+      <video
+        className="player__video"
+        ref={videoRef}
+        poster={movie?.posterImage}
+        onTimeUpdate={handleOnTimeUpdate}
+      >
+        {isSourceLoaded && <source src={movie?.videoLink} />}
       </video>
 
       <button type="button" className="player__exit" onClick={handleExitPlayer}>
@@ -64,14 +89,14 @@ function PlayerPage(): JSX.Element {
         </div>
 
         <div className="player__controls-row">
-          <button type="button" className="player__play">
-            <svg viewBox="0 0 19 19" width="19" height="19" onClick={togglePlay}>
+          <button type="button" className="player__play" onClick={togglePlay} disabled={!!isSourceLoading}>
+            <svg viewBox="0 0 19 19" width="19" height="19">
               {isPlaying && <use xlinkHref="#pause"></use>}
               {!isPlaying && <use xlinkHref="#play-s"></use>}
             </svg>
             <span>Play</span>
           </button>
-          <div className="player__name">{videoName}</div>
+          <div className="player__name">{movie && movie.title}</div>
 
           <button type="button" className="player__full-screen" onClick={toggleFullscreen}>
             <svg viewBox="0 0 27 27" width="27" height="27">

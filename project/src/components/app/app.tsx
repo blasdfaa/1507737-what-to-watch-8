@@ -26,11 +26,11 @@ function App(): JSX.Element {
           <MainPage />
         </Route>
 
-        <Route path={AppRoutes.MoviePage} exact>
+        <Route path={AppRoutes.MoviePageRoute} exact>
           <MoviePage />
         </Route>
 
-        <Route path={AppRoutes.MoviePlayer} exact>
+        <Route path={AppRoutes.MoviePlayerRoute} exact>
           <PlayerPage />
         </Route>
 
@@ -39,7 +39,7 @@ function App(): JSX.Element {
         </PrivateRoute>
 
         <PrivateRoute
-          path={AppRoutes.AddMovieReviewPage}
+          path={AppRoutes.AddMovieReviewRoute}
           authorizationStatus={AuthorizationStatus.Auth}
           exact
         >

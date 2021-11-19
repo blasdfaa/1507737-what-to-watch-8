@@ -14,22 +14,15 @@ export const genresNames = [
   'Thrillers',
 ] as const;
 
-// export enum Genres {
-//   AllGenres = 'All Genres',
-//   Comedies = 'Comedies',
-//   Crime = 'Crime',
-//   Documentary = ' Documentary',
-//   Dramas = 'Dramas',
-// }
-
 export enum AppRoutes {
   Home = '/',
   Login = '/login',
   FavoriteList = '/myList',
   Movies = '/films',
-  MoviePage = '/films/:id',
-  AddMovieReviewPage = '/films/:id/review',
-  MoviePlayer = '/player/:id',
+  Player = '/player',
+  AddMovieReviewRoute = '/films/:id/review',
+  MoviePlayerRoute = '/player/:id',
+  MoviePageRoute = '/films/:id',
 }
 
 export enum AuthorizationStatus {
@@ -39,7 +32,8 @@ export enum AuthorizationStatus {
 }
 
 export enum ActionType {
-  FetchAllMovies = 'movie/getAllMovies',
+  FetchAllMovies = 'movie/fetchAllMovies',
+  FetchMovieById = 'movie/fetchMovieById',
   ToggleFavoriteStatus = 'movie/toggleFavoriteStatus',
 
   FetchPromoMovie = 'promoMovie/fetchPromoMovie',

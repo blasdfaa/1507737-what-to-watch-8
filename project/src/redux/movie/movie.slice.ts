@@ -12,7 +12,9 @@ const DEFAULT_SELECTED_GENRE = 'All genres';
 
 type MovieSliceState = {
   movies: Movie[] | [];
+  movie: Movie | null;
   moviesStatus: ApiDataStatus;
+  movieFetchStatus: ApiDataStatus;
   toggleFavoriteStatus: ApiDataStatus;
   moviesError: string | null;
   selectedGenre: MovieGenre;
@@ -20,7 +22,9 @@ type MovieSliceState = {
 
 const initialState: MovieSliceState = {
   movies: [],
+  movie: null,
   moviesStatus: ApiDataStatus.Idle,
+  movieFetchStatus: ApiDataStatus.Idle,
   toggleFavoriteStatus: ApiDataStatus.Idle,
   moviesError: null,
   selectedGenre: DEFAULT_SELECTED_GENRE,
@@ -29,6 +33,13 @@ const initialState: MovieSliceState = {
 export const fetchAllMovies = createAsyncThunk<Movie[]>(ActionType.FetchAllMovies, async () => {
   const { data } = await api.get<ApiMovieData[]>(ApiEndpoint.Movies);
   const adaptedData = data.map((movie) => adaptMovieDataToClient(movie));
+
+  return adaptedData;
+});
+
+export const fetchMovieById = createAsyncThunk<Movie, number>(ActionType.FetchMovieById, async (movieId) => {
+  const { data } = await api.get<ApiMovieData>(`${ApiEndpoint.Movies}/${movieId}`);
+  const adaptedData = adaptMovieDataToClient(data);
 
   return adaptedData;
 });
@@ -68,6 +79,7 @@ export const movieSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllMovies.pending, (state) => {
+        state.movies = [];
         state.moviesStatus = ApiDataStatus.Loading;
       })
       .addCase(fetchAllMovies.fulfilled, (state, action) => {
@@ -75,10 +87,24 @@ export const movieSlice = createSlice({
 
         state.movies = movies;
         state.moviesStatus = ApiDataStatus.Success;
-        state.moviesError = null;
       })
       .addCase(fetchAllMovies.rejected, (state) => {
+        state.movies = [];
         state.moviesStatus = ApiDataStatus.Failed;
+      })
+      .addCase(fetchMovieById.pending, (state) => {
+        state.movie = null;
+        state.movieFetchStatus = ApiDataStatus.Loading;
+      })
+      .addCase(fetchMovieById.fulfilled, (state, action) => {
+        const movie = action.payload;
+
+        state.movie = movie;
+        state.movieFetchStatus = ApiDataStatus.Success;
+      })
+      .addCase(fetchMovieById.rejected, (state) => {
+        state.movie = null;
+        state.movieFetchStatus = ApiDataStatus.Failed;
       })
       .addCase(toggleFavoriteStatus.pending, (state) => {
         state.toggleFavoriteStatus = ApiDataStatus.Loading;

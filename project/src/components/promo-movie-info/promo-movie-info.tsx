@@ -1,4 +1,3 @@
-import { useHistory } from 'react-router';
 import clsx from 'clsx';
 
 import MovieControls from '../movie-controls/movie-controls';
@@ -11,8 +10,6 @@ type PromoMovieInfoProps = {
 };
 
 function PromoMovieInfo({ movie, full }: PromoMovieInfoProps): JSX.Element {
-  const history = useHistory();
-
   const filmWrapClasses = clsx('film-card__wrap', {
     'film-card__translate-top': full,
   });
@@ -20,13 +17,6 @@ function PromoMovieInfo({ movie, full }: PromoMovieInfoProps): JSX.Element {
   const filmPosterClasses = clsx('film-card__poster', {
     'film-card__poster--big': full,
   });
-
-  const handlePlayBtnClick = () => {
-    history.push({
-      pathname: `/player/${movie?.id}`,
-      state: { videoSource: movie?.videoLink, videoPoster: movie?.posterImage, videoName: movie?.title },
-    });
-  };
 
   return (
     <div className={filmWrapClasses}>
@@ -40,7 +30,7 @@ function PromoMovieInfo({ movie, full }: PromoMovieInfoProps): JSX.Element {
             <span className="film-card__genre">{movie?.genre}</span>
             <span className="film-card__year">{movie?.releasedYear}</span>
           </p>
-          <MovieControls movie={movie && movie} onPlayBtnClick={handlePlayBtnClick} />
+          <MovieControls movie={movie && movie} />
         </div>
       </div>
     </div>
