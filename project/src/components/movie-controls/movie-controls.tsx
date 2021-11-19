@@ -18,8 +18,9 @@ function MovieControls({ movie, isFull }: MovieControlsProps): JSX.Element {
   const dispatch = useTypedDispatch();
 
   const favoriteMovieToggleStatus = useTypedSelector(getFavoriteToggleStatus);
+  // const userAuthStatus = useTypedSelector(getAuthorizationStatus);
 
-  const handleChangeFavoriteStatus = () => {
+  const handleChangeFavoriteStatus = async () => {
     if (movie) {
       dispatch(toggleFavoriteStatus(movie));
     }

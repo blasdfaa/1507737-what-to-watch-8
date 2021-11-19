@@ -2,49 +2,39 @@
 import React from 'react';
 
 import AppHeader from '../../components/app-header/app-header';
-import LoginAlert from '../../components/login-alert/login-alert';
+import useTypedDispatch from '../../hooks/use-typed-dispatch';
+import { requireLogin } from '../../redux/user-process/user-process.slice';
 
-// type FormErrorsState = {
-//   email: string;
-//   password: string;
-// };
+const EMAIL_VALID_REGEX =
+  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const PASSWORD_VALID_REGEX = /^(?:[0-9]+[a-z]|[a-z]+[0-9])[a-z0-9]*$/i;
+
+const isEmailValid = (email: string): boolean => EMAIL_VALID_REGEX.test(email.toLowerCase());
+const isPasswordValid = (password: string): boolean => PASSWORD_VALID_REGEX.test(password.toLowerCase());
 
 function LoginPage(): JSX.Element {
-  // const [formErrors, setFormErrors] = React.useState<FormErrorsState>({ email: '', password: '' });
-  // const [isFormValid, setFormValid] = React.useState<boolean>(false);
-  const [isEmailValid, setEmailValid] = React.useState<boolean>(false);
-  const [isPasswordValid, setPasswordValid] = React.useState<boolean>(false);
-  const [emailValue, setEmailValue] = React.useState<string>('');
-  const [passwordValue, setPasswordValue] = React.useState<string>('');
+  const dispatch = useTypedDispatch();
+
+  const [isEmailError, setEmailError] = React.useState<boolean>(false);
+  const [isPasswordError, setPasswordError] = React.useState<boolean>(false);
+
+  const emailRef = React.useRef<HTMLInputElement | null>(null);
+  const passwordRef = React.useRef<HTMLInputElement | null>(null);
 
   const handleSubmitForm = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
 
-    switch (passwordValue) {
-      case '123':
-        setPasswordValid(false);
-        break;
+    if (emailRef.current !== null && passwordRef.current !== null) {
+      const email = emailRef.current;
+      const password = passwordRef.current;
 
-      default:
-        setPasswordValid(true);
-        break;
+      setEmailError(!isEmailValid(email.value));
+      setPasswordError(!isPasswordValid(password.value));
+
+      if (isEmailValid(email.value) && isPasswordValid(password.value)) {
+        dispatch(requireLogin({ email: email.value, password: password.value }));
+      }
     }
-  };
-
-  const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const email = e.currentTarget.value;
-
-    if (email === '123') {
-      setEmailValid(true);
-    } else {
-      setEmailValid(false);
-    }
-
-    setEmailValue(email);
-  };
-
-  const handleChangePassword = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setPasswordValue(e.currentTarget.value);
   };
 
   return (
@@ -55,33 +45,32 @@ function LoginPage(): JSX.Element {
 
       <div className="sign-in user-page__content">
         <form action="#" className="sign-in__form" onSubmit={handleSubmitForm}>
-          {!isEmailValid && <LoginAlert>Email</LoginAlert>}
-          {!isPasswordValid && <LoginAlert>Password</LoginAlert>}
-
+          <div className="sign-in__message">
+            {isEmailError && <p>Please enter a valid email address</p>}
+            {isPasswordError && <p>Please enter a valid password</p>}
+          </div>
           <div className="sign-in__fields">
-            <div className="sign-in__field">
+            <div className={`sign-in__field ${isEmailError ? 'sign-in__field--error' : ''}`}>
               <input
+                ref={emailRef}
                 className="sign-in__input"
-                type="email"
+                type="text"
                 placeholder="Email address"
                 name="user-email"
                 id="user-email"
-                value={emailValue}
-                onChange={handleChangeEmail}
               />
               <label className="sign-in__label visually-hidden" htmlFor="user-email">
                 Email address
               </label>
             </div>
-            <div className="sign-in__field">
+            <div className={`sign-in__field ${isPasswordError ? 'sign-in__field--error' : ''}`}>
               <input
+                ref={passwordRef}
                 className="sign-in__input"
                 type="password"
                 placeholder="Password"
                 name="user-password"
                 id="user-password"
-                value={passwordValue}
-                onChange={handleChangePassword}
               />
               <label className="sign-in__label visually-hidden" htmlFor="user-password">
                 Password

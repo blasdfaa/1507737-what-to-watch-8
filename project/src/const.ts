@@ -40,6 +40,9 @@ export enum ActionType {
 
   FetchFavoriteMovies = 'favoriteMovie/fetchFavoriteMovie',
 
+  CheckAuthStatus = 'user/checkAuthStatus',
+  RequireLogin = 'user/requireLogin',
+  RequireLogout = 'user/requireLogout',
   RedirectToRoute = 'user/redirectToRoute',
 }
 

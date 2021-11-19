@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ApiDataStatus, AuthorizationStatus } from '../../const';
+import { ApiDataStatus } from '../../const';
 import AppHeader from '../../components/app-header/app-header';
 import GenresBar from '../../components/genres-bar/genres-bar';
 import UserBlock from '../../components/user-block/user-block';
@@ -18,6 +18,7 @@ import {
 import MoviesList from '../../components/movies-list/movies-list';
 import { getPromoMovie, getPromoMovieFetchStatus } from '../../redux/promo-movie/promo-movie.selector';
 import { fetchPromoMovie } from '../../redux/promo-movie/promo-movie.slice';
+import { getAuthorizationStatus } from '../../redux/user-process/user-process.selector';
 
 import type { Movie, MovieGenre } from '../../types/movie';
 
@@ -33,6 +34,7 @@ function MainPage(): JSX.Element {
   const moviesData = useTypedSelector(getAllMoviesItems);
   const filteredMovies = useTypedSelector(filteredMoviesByGenreSelector);
   const promoMovie = useTypedSelector(getPromoMovie);
+  const userAuthStatus = useTypedSelector(getAuthorizationStatus);
 
   const [movies, setMovies] = React.useState<Movie[]>([]);
   const [moviesToShow, setMoviesToShow] = React.useState<number>(INITIAL_SHOWED_MOVIES_COUNT);
@@ -76,7 +78,7 @@ function MainPage(): JSX.Element {
         <h1 className="visually-hidden">WTW</h1>
 
         <AppHeader className="film-card__head">
-          <UserBlock authorizationStatus={AuthorizationStatus.Auth} />
+          <UserBlock />
         </AppHeader>
 
         <PromoMovieInfo movie={promoMovie} />
