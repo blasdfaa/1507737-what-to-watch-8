@@ -8,9 +8,7 @@ type MoviesListProps = {
   movies: Movie[];
 };
 
-function MoviesList(props: MoviesListProps): JSX.Element {
-  const { movies } = props;
-
+function MoviesList({ movies }: MoviesListProps): JSX.Element {
   return (
     <div className="catalog__films-list">
       {movies &&

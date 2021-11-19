@@ -8,6 +8,8 @@ import { redirectToRouteAction } from '../user-process/user-process.action';
 import type { Movie, MovieGenre } from '../../types/movie';
 import type { ApiMovieData } from '../../types/api';
 import type { RootState } from '../store';
+import { updatePromoMovie } from '../promo-movie/promo-movie.slice';
+import { updateFavoriteMovies } from '../favorite-movies/favorite-movies.slice';
 
 const DEFAULT_SELECTED_GENRE = 'All genres';
 const NOT_AUTHORIZED_ERROR_MESSAGE = 'To add a movie to your favorites, you need to log in';
@@ -65,6 +67,10 @@ export const toggleFavoriteStatus = createAsyncThunk<Movie, Movie, { state: Root
       );
       const adaptedData = adaptMovieDataToClient(data);
 
+      dispatch(updateMovies(adaptedData));
+      dispatch(updatePromoMovie(adaptedData));
+      dispatch(updateFavoriteMovies(adaptedData));
+
       return adaptedData;
     } catch (e) {
       // TODO: Вернуть ошибку из axios'a
@@ -80,7 +86,7 @@ export const movieSlice = createSlice({
     selectGenre: (state, action: PayloadAction<MovieGenre>) => {
       state.selectedGenre = action.payload;
     },
-    updateMovie: (state, action: PayloadAction<Movie>) => {
+    updateMovies: (state, action: PayloadAction<Movie>) => {
       const newMovie = action.payload;
       const index = state.allMovies.findIndex((movie) => movie.id === newMovie.id);
 
@@ -132,5 +138,5 @@ export const movieSlice = createSlice({
   },
 });
 
-export const { selectGenre, updateMovie } = movieSlice.actions;
+export const { selectGenre, updateMovies } = movieSlice.actions;
 export default movieSlice.reducer;

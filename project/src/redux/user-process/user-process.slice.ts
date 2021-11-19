@@ -75,9 +75,6 @@ export const userProcessSlice = createSlice({
   reducers: {},
   extraReducers: (builder) =>
     builder
-      .addCase(checkAuthStatus.pending, (state) => {
-        state.authorizationStatus = AuthorizationStatus.NoAuth;
-      })
       .addCase(checkAuthStatus.fulfilled, (state, action) => {
         const userData = action.payload;
 

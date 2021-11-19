@@ -7,10 +7,10 @@ import useTypedSelector from '../../hooks/use-typed-selector';
 import { getAuthorizationStatus, getUserInfo } from '../../redux/user-process/user-process.selector';
 import { requireLogout } from '../../redux/user-process/user-process.slice';
 
-function UserBlock(): JSX.Element {
+function UserBlock(): JSX.Element | null {
   const dispatch = useTypedDispatch();
 
-  const authorizationStatus = useTypedSelector(getAuthorizationStatus);
+  const authStatus = useTypedSelector(getAuthorizationStatus);
   const userInfo = useTypedSelector(getUserInfo);
 
   const handleLogoutClick = (e: React.SyntheticEvent) => {
@@ -19,13 +19,19 @@ function UserBlock(): JSX.Element {
     dispatch(requireLogout());
   };
 
+  if (authStatus === AuthorizationStatus.Unknown) {
+    return null;
+  }
+
   return (
     <ul className="user-block">
-      {authorizationStatus === AuthorizationStatus.Auth ? (
+      {authStatus === AuthorizationStatus.Auth ? (
         <>
           <li className="user-block__item">
             <div className="user-block__avatar">
-              <img src={userInfo?.avatarUrl} alt="User avatar" width="63" height="63" />
+              <Link to={AppRoutes.FavoriteList}>
+                <img src={userInfo?.avatarUrl} alt="User avatar" width="63" height="63" />
+              </Link>
             </div>
           </li>
           <li className="user-block__item">

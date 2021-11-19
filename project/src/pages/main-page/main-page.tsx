@@ -18,7 +18,6 @@ import {
 import MoviesList from '../../components/movies-list/movies-list';
 import { getPromoMovie, getPromoMovieFetchStatus } from '../../redux/promo-movie/promo-movie.selector';
 import { fetchPromoMovie } from '../../redux/promo-movie/promo-movie.slice';
-import { getAuthorizationStatus } from '../../redux/user-process/user-process.selector';
 
 import type { Movie, MovieGenre } from '../../types/movie';
 
@@ -34,7 +33,6 @@ function MainPage(): JSX.Element {
   const moviesData = useTypedSelector(getAllMoviesItems);
   const filteredMovies = useTypedSelector(filteredMoviesByGenreSelector);
   const promoMovie = useTypedSelector(getPromoMovie);
-  const userAuthStatus = useTypedSelector(getAuthorizationStatus);
 
   const [movies, setMovies] = React.useState<Movie[]>([]);
   const [moviesToShow, setMoviesToShow] = React.useState<number>(INITIAL_SHOWED_MOVIES_COUNT);

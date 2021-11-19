@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { ActionType, ApiDataStatus, ApiEndpoint } from '../../const';
 import { adaptMovieDataToClient } from '../../utils/adapters/movie-adapter';
@@ -29,7 +29,13 @@ export const fetchPromoMovie = createAsyncThunk<Movie>(ActionType.FetchPromoMovi
 export const promoMovieSlice = createSlice({
   name: 'promoMovie',
   initialState,
-  reducers: {},
+  reducers: {
+    updatePromoMovie: (state, action: PayloadAction<Movie>) => {
+      const newMovie = action.payload;
+
+      state.promoMovie = newMovie;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchPromoMovie.pending, (state) => {
@@ -48,4 +54,5 @@ export const promoMovieSlice = createSlice({
   },
 });
 
+export const { updatePromoMovie } = promoMovieSlice.actions;
 export default promoMovieSlice.reducer;

@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import api from '../api';
 import { ActionType, ApiDataStatus, ApiEndpoint } from '../../const';
@@ -29,7 +29,16 @@ export const fetchFavoriteMovies = createAsyncThunk<Movie[]>(ActionType.FetchFav
 const favoriteMoviesSlice = createSlice({
   name: 'favoriteMovies',
   initialState,
-  reducers: {},
+  reducers: {
+    updateFavoriteMovies: (state, action: PayloadAction<Movie>) => {
+      const newMovie = action.payload;
+      const index = state.favoriteMovies.findIndex((movie) => movie.id === newMovie.id);
+
+      if (index !== -1) {
+        state.favoriteMovies[index] = newMovie;
+      }
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchFavoriteMovies.pending, (state) => {
@@ -48,4 +57,5 @@ const favoriteMoviesSlice = createSlice({
   },
 });
 
+export const { updateFavoriteMovies } = favoriteMoviesSlice.actions;
 export default favoriteMoviesSlice.reducer;
