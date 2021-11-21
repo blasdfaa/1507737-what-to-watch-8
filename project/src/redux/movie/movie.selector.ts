@@ -1,28 +1,37 @@
 import { createSelector } from 'reselect';
 
 import { ApiDataStatus } from '../../const';
-import { filterMoviesByGenre } from '../../utils/common/filter-movies-on-genre';
+import { filterMoviesByGenre } from '../../utils/common/filter-movies-by-genre';
 
-import type { Movie, MovieGenre } from '../../types/movie';
 import type { RootState } from '../store';
+import type { MovieGenre } from '../../types/movie';
 
-export const getMoviesFetchStatus = (state: RootState): ApiDataStatus =>
-  state.ALL_MOVIES_DATA.allMoviesFetchStatus;
+// init
+const all = (state: RootState) => state.MOVIES;
+const allMovies = (state: RootState) => all(state).allMovies;
+const favoriteMovies = (state: RootState) => all(state).favoriteMovies;
+const promoMovie = (state: RootState) => all(state).promoMovie;
+const oneMovie = (state: RootState) => all(state).oneMovie;
 
-export const getMovieFetchStatus = (state: RootState): ApiDataStatus =>
-  state.ALL_MOVIES_DATA.movieFetchStatus;
+// get
+export const getSelectedGenre = (state: RootState): MovieGenre => all(state).selectedGenre;
 
-export const getAllMoviesItems = (state: RootState): Movie[] | [] => state.ALL_MOVIES_DATA.allMovies;
+export const getAllMoviesLoadingStatus = (state: RootState): ApiDataStatus => allMovies(state).loadingStatus;
+export const getFavoriteMoviesLoadingStatus = (state: RootState): ApiDataStatus =>
+  favoriteMovies(state).loadingStatus;
+export const getOneMovieLoadingStatus = (state: RootState): ApiDataStatus => oneMovie(state).loadingStatus;
 
-export const getMovie = (state: RootState): Movie | null => state.ALL_MOVIES_DATA.movie;
+export const getFavoriteFlagChangeStatus = (state: RootState): ApiDataStatus =>
+  all(state).favoriteFlagChangeStatus;
 
-export const getSelectedGenre = (state: RootState): MovieGenre => state.ALL_MOVIES_DATA.selectedGenre;
-
-export const getFavoriteToggleStatus = (state: RootState): ApiDataStatus =>
-  state.ALL_MOVIES_DATA.toggleFavoriteFetchStatus;
+// selector
+export const allMoviesSelector = createSelector(allMovies, (movies) => movies.items);
+export const favoriteMoviesSelector = createSelector(favoriteMovies, (movies) => movies.items);
+export const promoMovieSelector = createSelector(promoMovie, (movie) => movie.data);
+export const oneMovieSelector = createSelector(oneMovie, (movie) => movie.data);
 
 export const filteredMoviesByGenreSelector = createSelector(
-  getAllMoviesItems,
+  allMoviesSelector,
   getSelectedGenre,
   (movies, currentGenre) => filterMoviesByGenre(movies, currentGenre),
 );

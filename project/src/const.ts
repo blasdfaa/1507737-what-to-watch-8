@@ -34,16 +34,16 @@ export enum AuthorizationStatus {
 export enum ActionType {
   FetchAllMovies = 'movie/fetchAllMovies',
   FetchMovieById = 'movie/fetchMovieById',
+  FetchPromoMovie = 'movie/fetchPromoMovie',
+  FetchFavoriteMovies = 'movie/fetchFavoriteMovie',
   ToggleFavoriteStatus = 'movie/toggleFavoriteStatus',
-
-  FetchPromoMovie = 'promoMovie/fetchPromoMovie',
-
-  FetchFavoriteMovies = 'favoriteMovie/fetchFavoriteMovie',
 
   CheckAuthStatus = 'user/checkAuthStatus',
   RequireLogin = 'user/requireLogin',
   RequireLogout = 'user/requireLogout',
   RedirectToRoute = 'user/redirectToRoute',
+
+  FetchReviews = 'review/fetchReviews',
 }
 
 export enum ApiEndpoint {

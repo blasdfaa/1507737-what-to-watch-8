@@ -6,7 +6,7 @@ import type { MovieGenre } from '../../types/movie';
 
 type GenresBarProps = {
   selectedGenre: MovieGenre;
-  onGenreClick: (e: React.SyntheticEvent, genre: MovieGenre) => void;
+  onGenreClick: (e: React.SyntheticEvent<HTMLAnchorElement>, genre: MovieGenre) => void;
 };
 
 function GenresBar({ selectedGenre, onGenreClick }: GenresBarProps): JSX.Element {

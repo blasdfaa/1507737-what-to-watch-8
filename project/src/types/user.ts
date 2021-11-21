@@ -1,3 +1,5 @@
+import { TokenType } from '../services/auth-token';
+
 export type AuthUserData = {
   email: string;
   password: string;
@@ -8,5 +10,5 @@ export type UserInfo = {
   email: string;
   id: number;
   name: string;
-  token: string;
+  token: TokenType;
 };

@@ -5,19 +5,19 @@ import AppHeader from '../../components/app-header/app-header';
 import GenresBar from '../../components/genres-bar/genres-bar';
 import UserBlock from '../../components/user-block/user-block';
 import AppFooter from '../../components/app-footer/app-footer';
-import PromoMovieInfo from '../../components/promo-movie-info/promo-movie-info';
 import useTypedSelector from '../../hooks/use-typed-selector';
 import useTypedDispatch from '../../hooks/use-typed-dispatch';
-import { fetchAllMovies, selectGenre } from '../../redux/movie/movie.slice';
+import { selectGenre } from '../../redux/movie/movie.slice';
 import {
   filteredMoviesByGenreSelector,
-  getAllMoviesItems,
-  getMoviesFetchStatus,
+  allMoviesSelector,
   getSelectedGenre,
+  getAllMoviesLoadingStatus,
+  promoMovieSelector,
 } from '../../redux/movie/movie.selector';
 import MoviesList from '../../components/movies-list/movies-list';
-import { getPromoMovie, getPromoMovieFetchStatus } from '../../redux/promo-movie/promo-movie.selector';
-import { fetchPromoMovie } from '../../redux/promo-movie/promo-movie.slice';
+import { fetchAllMovies, fetchPromoMovie } from '../../redux/movie/movie.async';
+import PromoMovieInfo from '../../components/promo-movie-info/promo-movie-info';
 
 import type { Movie, MovieGenre } from '../../types/movie';
 
@@ -28,37 +28,37 @@ function MainPage(): JSX.Element {
   const dispatch = useTypedDispatch();
 
   const currentGenre = useTypedSelector(getSelectedGenre);
-  const allMoviesFetchStatus = useTypedSelector(getMoviesFetchStatus);
-  const promoMovieLoadingStatus = useTypedSelector(getPromoMovieFetchStatus);
-  const moviesData = useTypedSelector(getAllMoviesItems);
+  const allMoviesLoadingStatus = useTypedSelector(getAllMoviesLoadingStatus);
+  const allMovies = useTypedSelector(allMoviesSelector);
   const filteredMovies = useTypedSelector(filteredMoviesByGenreSelector);
-  const promoMovie = useTypedSelector(getPromoMovie);
+  const promoMovie = useTypedSelector(promoMovieSelector);
 
   const [movies, setMovies] = React.useState<Movie[]>([]);
   const [moviesToShow, setMoviesToShow] = React.useState<number>(INITIAL_SHOWED_MOVIES_COUNT);
 
   React.useEffect(() => {
-    if (allMoviesFetchStatus === ApiDataStatus.Idle) {
+    if (allMoviesLoadingStatus === ApiDataStatus.Idle) {
       dispatch(fetchAllMovies());
     }
-  }, [allMoviesFetchStatus]);
+  }, [dispatch, allMoviesLoadingStatus]);
 
   React.useEffect(() => {
-    if (promoMovieLoadingStatus === ApiDataStatus.Idle) {
-      dispatch(fetchPromoMovie());
-    }
-  }, [promoMovieLoadingStatus]);
+    dispatch(fetchPromoMovie());
+  }, [dispatch]);
 
   React.useEffect(() => {
     setMovies(filteredMovies);
-  }, [currentGenre, moviesData]);
+  }, [currentGenre, allMovies, filteredMovies]);
 
-  const handleChangeGenre = (e: React.SyntheticEvent, genre: MovieGenre): void => {
-    e.preventDefault();
+  const handleChangeGenre = React.useCallback(
+    (e: React.SyntheticEvent<HTMLAnchorElement>, genre: MovieGenre): void => {
+      e.preventDefault();
 
-    dispatch(selectGenre(genre));
-    setMoviesToShow(INITIAL_SHOWED_MOVIES_COUNT);
-  };
+      dispatch(selectGenre(genre));
+      setMoviesToShow(INITIAL_SHOWED_MOVIES_COUNT);
+    },
+    [dispatch],
+  );
 
   const handleShowMoreBtn = (): void => {
     setMoviesToShow((prevState) => prevState + SHOWED_MOVIES_STEP);

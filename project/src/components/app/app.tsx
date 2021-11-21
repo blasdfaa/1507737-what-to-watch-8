@@ -1,4 +1,4 @@
-import { Router, Route, Switch } from 'react-router-dom';
+import { Route, Router, Switch } from 'react-router-dom';
 
 import { AppRoutes, AuthorizationStatus, ERROR_404_MESSAGE } from '../../const';
 import PrivateRoute from '../private-route/private-route';
@@ -47,7 +47,7 @@ function App(): JSX.Element {
         </PrivateRoute>
 
         <Route exact>
-          <ErrorPage code="404" text={ERROR_404_MESSAGE} />
+          <ErrorPage code="404" text={ERROR_404_MESSAGE} />{' '}
         </Route>
       </Switch>
     </Router>

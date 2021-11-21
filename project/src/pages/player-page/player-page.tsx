@@ -5,8 +5,8 @@ import { ApiDataStatus } from '../../const';
 import useTypedDispatch from '../../hooks/use-typed-dispatch';
 import useTypedSelector from '../../hooks/use-typed-selector';
 import useVideoPlayer from '../../hooks/use-video-player';
-import { getMovie, getMovieFetchStatus } from '../../redux/movie/movie.selector';
-import { fetchMovieById } from '../../redux/movie/movie.slice';
+import { fetchMovieById } from '../../redux/movie/movie.async';
+import { getOneMovieLoadingStatus, oneMovieSelector } from '../../redux/movie/movie.selector';
 
 type UseParams = {
   id: string;
@@ -17,17 +17,15 @@ function PlayerPage(): JSX.Element {
   const history = useHistory();
   const dispatch = useTypedDispatch();
 
-  const movie = useTypedSelector(getMovie);
-  const movieLoadingStatus = useTypedSelector(getMovieFetchStatus);
+  const movie = useTypedSelector(oneMovieSelector);
+  const movieLoadingStatus = useTypedSelector(getOneMovieLoadingStatus);
 
   const playerRef = React.useRef<HTMLDivElement | null>(null);
   const videoRef = React.useRef<HTMLVideoElement | null>(null);
   const controlRef = React.useRef<HTMLInputElement | null>(null);
 
   React.useEffect(() => {
-    if (movieLoadingStatus === ApiDataStatus.Idle) {
-      dispatch(fetchMovieById(+movieId));
-    }
+    dispatch(fetchMovieById(+movieId));
   }, []);
 
   const {
@@ -45,7 +43,7 @@ function PlayerPage(): JSX.Element {
   };
 
   const isSourceLoading = movieLoadingStatus === ApiDataStatus.Loading;
-  const isSourceLoaded = movieLoadingStatus === ApiDataStatus.Success;
+  const isSourceLoaded = movieLoadingStatus === ApiDataStatus.Idle;
 
   return (
     <div className={`player ${isSourceLoading ? 'player--source-loading' : ''}`} ref={playerRef}>
@@ -62,11 +60,9 @@ function PlayerPage(): JSX.Element {
       >
         {isSourceLoaded && <source src={movie?.videoLink} />}
       </video>
-
       <button type="button" className="player__exit" onClick={handleExitPlayer}>
         Exit
       </button>
-
       <div className="player__controls">
         <div className="player__controls-row">
           <div className="player__time">
@@ -87,7 +83,6 @@ function PlayerPage(): JSX.Element {
           </div>
           <div className="player__time-value">{remainingVideoTime}</div>
         </div>
-
         <div className="player__controls-row">
           <button type="button" className="player__play" onClick={togglePlay} disabled={!!isSourceLoading}>
             <svg viewBox="0 0 19 19" width="19" height="19">

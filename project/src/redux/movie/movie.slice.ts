@@ -1,83 +1,69 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { ActionType, ApiDataStatus, ApiEndpoint, AppRoutes, AuthorizationStatus } from '../../const';
-import { adaptMovieDataToClient } from '../../utils/adapters/movie-adapter';
-import api from '../api';
-import { redirectToRouteAction } from '../user-process/user-process.action';
+import { ApiDataStatus } from '../../const';
+import {
+  fetchAllMovies,
+  fetchFavoriteMovies,
+  fetchMovieById,
+  fetchPromoMovie,
+  toggleFavoriteMovieFlag,
+} from './movie.async';
 
 import type { Movie, MovieGenre } from '../../types/movie';
-import type { ApiMovieData } from '../../types/api';
-import type { RootState } from '../store';
-import { updatePromoMovie } from '../promo-movie/promo-movie.slice';
-import { updateFavoriteMovies } from '../favorite-movies/favorite-movies.slice';
 
 const DEFAULT_SELECTED_GENRE = 'All genres';
-const NOT_AUTHORIZED_ERROR_MESSAGE = 'To add a movie to your favorites, you need to log in';
 
 type MovieSliceState = {
-  allMovies: Movie[] | [];
-  movie: Movie | null;
-  allMoviesFetchStatus: ApiDataStatus;
-  movieFetchStatus: ApiDataStatus;
-  toggleFavoriteFetchStatus: ApiDataStatus;
-  error: string | undefined;
+  allMovies: {
+    items: Movie[] | [];
+    loadingStatus: ApiDataStatus;
+    error: string | undefined;
+  };
+  favoriteMovies: {
+    items: Movie[] | [];
+    loadingStatus: ApiDataStatus;
+    error: string | undefined;
+  };
+  promoMovie: {
+    data: Movie | null;
+    loadingStatus: ApiDataStatus;
+    error: string | undefined;
+  };
+  oneMovie: {
+    data: Movie | null;
+    loadingStatus: ApiDataStatus;
+    error: string | undefined;
+  };
   selectedGenre: MovieGenre;
+  favoriteFlagChangeStatus: ApiDataStatus;
+  error: string | undefined;
 };
 
 const initialState: MovieSliceState = {
-  allMovies: [],
-  movie: null,
-  allMoviesFetchStatus: ApiDataStatus.Idle,
-  movieFetchStatus: ApiDataStatus.Idle,
-  toggleFavoriteFetchStatus: ApiDataStatus.Idle,
-  error: undefined,
-  selectedGenre: DEFAULT_SELECTED_GENRE,
-};
-
-export const fetchAllMovies = createAsyncThunk<Movie[]>(ActionType.FetchAllMovies, async () => {
-  const { data } = await api.get<ApiMovieData[]>(ApiEndpoint.Movies);
-  const adaptedData = data.map((movie) => adaptMovieDataToClient(movie));
-
-  return adaptedData;
-});
-
-export const fetchMovieById = createAsyncThunk<Movie, number>(ActionType.FetchMovieById, async (movieId) => {
-  const { data } = await api.get<ApiMovieData>(`${ApiEndpoint.Movies}/${movieId}`);
-  const adaptedData = adaptMovieDataToClient(data);
-
-  return adaptedData;
-});
-
-export const toggleFavoriteStatus = createAsyncThunk<Movie, Movie, { state: RootState; rejectValue: string }>(
-  ActionType.ToggleFavoriteStatus,
-  async (movie, { getState, dispatch, rejectWithValue }) => {
-    const userAuthStatus = getState().USER_PROCESS.authorizationStatus;
-
-    if (userAuthStatus === AuthorizationStatus.NoAuth || userAuthStatus === AuthorizationStatus.Unknown) {
-      await dispatch(redirectToRouteAction(AppRoutes.Login));
-      return rejectWithValue(NOT_AUTHORIZED_ERROR_MESSAGE);
-    }
-
-    try {
-      const currentMovie = movie;
-      const isMovieFavorite = currentMovie.isFavorite;
-
-      const { data } = await api.post<ApiMovieData>(
-        `${ApiEndpoint.FavoriteMovies}/${currentMovie.id}/${isMovieFavorite ? '0' : '1'}`,
-      );
-      const adaptedData = adaptMovieDataToClient(data);
-
-      dispatch(updateMovies(adaptedData));
-      dispatch(updatePromoMovie(adaptedData));
-      dispatch(updateFavoriteMovies(adaptedData));
-
-      return adaptedData;
-    } catch (e) {
-      // TODO: Вернуть ошибку из axios'a
-      return rejectWithValue('error');
-    }
+  allMovies: {
+    items: [],
+    loadingStatus: ApiDataStatus.Idle,
+    error: undefined,
   },
-);
+  favoriteMovies: {
+    items: [],
+    loadingStatus: ApiDataStatus.Idle,
+    error: undefined,
+  },
+  promoMovie: {
+    data: null,
+    loadingStatus: ApiDataStatus.Idle,
+    error: undefined,
+  },
+  oneMovie: {
+    data: null,
+    loadingStatus: ApiDataStatus.Idle,
+    error: undefined,
+  },
+  selectedGenre: DEFAULT_SELECTED_GENRE,
+  favoriteFlagChangeStatus: ApiDataStatus.Idle,
+  error: undefined,
+};
 
 export const movieSlice = createSlice({
   name: 'movie',
@@ -86,57 +72,97 @@ export const movieSlice = createSlice({
     selectGenre: (state, action: PayloadAction<MovieGenre>) => {
       state.selectedGenre = action.payload;
     },
-    updateMovies: (state, action: PayloadAction<Movie>) => {
+    updateMovie: (state, action: PayloadAction<Movie>) => {
       const newMovie = action.payload;
-      const index = state.allMovies.findIndex((movie) => movie.id === newMovie.id);
+      const index = state.allMovies.items.findIndex((movie) => movie.id === newMovie.id);
 
       if (index !== -1) {
-        state.allMovies[index] = newMovie;
+        state.allMovies.items[index] = newMovie;
       }
+
+      state.promoMovie.data = newMovie;
+      state.oneMovie.data = newMovie;
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllMovies.pending, (state) => {
-        state.allMovies = [];
-        state.allMoviesFetchStatus = ApiDataStatus.Loading;
+        state.allMovies.items = [];
+        state.allMovies.loadingStatus = ApiDataStatus.Loading;
       })
       .addCase(fetchAllMovies.fulfilled, (state, action) => {
         const movies = action.payload;
 
-        state.allMovies = movies;
-        state.allMoviesFetchStatus = ApiDataStatus.Success;
+        state.allMovies.items = movies;
+        state.allMovies.loadingStatus = ApiDataStatus.Success;
       })
       .addCase(fetchAllMovies.rejected, (state) => {
-        state.allMovies = [];
-        state.allMoviesFetchStatus = ApiDataStatus.Failed;
+        state.allMovies.items = [];
+        state.allMovies.loadingStatus = ApiDataStatus.Failed;
+      })
+      .addCase(fetchFavoriteMovies.pending, (state) => {
+        state.favoriteMovies.loadingStatus = ApiDataStatus.Loading;
+      })
+      .addCase(fetchFavoriteMovies.fulfilled, (state, action) => {
+        const movies = action.payload;
+
+        state.favoriteMovies.items = movies;
+        state.favoriteMovies.loadingStatus = ApiDataStatus.Success;
+        state.favoriteMovies.error = undefined;
+      })
+      .addCase(fetchFavoriteMovies.rejected, (state, action) => {
+        const errorMessage = action.payload;
+
+        state.favoriteMovies.loadingStatus = ApiDataStatus.Failed;
+        state.favoriteMovies.error = errorMessage;
       })
       .addCase(fetchMovieById.pending, (state) => {
-        state.movie = null;
-        state.movieFetchStatus = ApiDataStatus.Loading;
+        state.oneMovie.data = null;
+        state.oneMovie.loadingStatus = ApiDataStatus.Loading;
       })
       .addCase(fetchMovieById.fulfilled, (state, action) => {
         const movie = action.payload;
 
-        state.movie = movie;
-        state.movieFetchStatus = ApiDataStatus.Success;
+        state.oneMovie.data = movie;
+        state.oneMovie.loadingStatus = ApiDataStatus.Idle;
       })
-      .addCase(fetchMovieById.rejected, (state) => {
-        state.movie = null;
-        state.movieFetchStatus = ApiDataStatus.Failed;
+      .addCase(fetchMovieById.rejected, (state, action) => {
+        const errorMessage = action.payload;
+
+        state.oneMovie.data = null;
+        state.oneMovie.loadingStatus = ApiDataStatus.Failed;
+        state.oneMovie.error = errorMessage;
       })
-      .addCase(toggleFavoriteStatus.pending, (state) => {
-        state.toggleFavoriteFetchStatus = ApiDataStatus.Loading;
+      .addCase(fetchPromoMovie.pending, (state) => {
+        state.promoMovie.loadingStatus = ApiDataStatus.Loading;
       })
-      .addCase(toggleFavoriteStatus.fulfilled, (state) => {
-        state.toggleFavoriteFetchStatus = ApiDataStatus.Idle;
+      .addCase(fetchPromoMovie.fulfilled, (state, action) => {
+        const movie = action.payload;
+
+        state.promoMovie.data = movie;
+        state.promoMovie.loadingStatus = ApiDataStatus.Success;
+        state.promoMovie.error = undefined;
       })
-      .addCase(toggleFavoriteStatus.rejected, (state, action) => {
-        state.toggleFavoriteFetchStatus = ApiDataStatus.Idle;
-        state.error = action.payload;
+      .addCase(fetchPromoMovie.rejected, (state, action) => {
+        const errorMessage = action.payload;
+
+        state.promoMovie.loadingStatus = ApiDataStatus.Failed;
+        state.promoMovie.error = errorMessage;
+      })
+      .addCase(toggleFavoriteMovieFlag.pending, (state) => {
+        state.favoriteFlagChangeStatus = ApiDataStatus.Loading;
+      })
+      .addCase(toggleFavoriteMovieFlag.fulfilled, (state) => {
+        state.favoriteFlagChangeStatus = ApiDataStatus.Idle;
+      })
+      .addCase(toggleFavoriteMovieFlag.rejected, (state, action) => {
+        const errorMessage = action.payload;
+
+        state.favoriteFlagChangeStatus = ApiDataStatus.Idle;
+        state.error = errorMessage;
       });
   },
 });
 
-export const { selectGenre, updateMovies } = movieSlice.actions;
+export const { selectGenre, updateMovie } = movieSlice.actions;
 export default movieSlice.reducer;

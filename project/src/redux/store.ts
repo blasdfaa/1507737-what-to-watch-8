@@ -1,16 +1,14 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
 import { redirect } from './middlewares/redirect';
-import favoriteMoviesSliceReducer from './favorite-movies/favorite-movies.slice';
-import movieSliceReducer from './movie/movie.slice';
-import promoMovieSliceReducer from './promo-movie/promo-movie.slice';
-import userProcessSliceReducer from './user-process/user-process.slice';
+import movieReducer from './movie/movie.slice';
+import reviewReducer from './review/review.slice';
+import userProcessReducer from './user-process/user-process.slice';
 
 const rootReducer = combineReducers({
-  ALL_MOVIES_DATA: movieSliceReducer,
-  PROMO_MOVIE: promoMovieSliceReducer,
-  FAVORITE_MOVIES: favoriteMoviesSliceReducer,
-  USER_PROCESS: userProcessSliceReducer,
+  MOVIES: movieReducer,
+  REVIEWS: reviewReducer,
+  USER_PROCESS: userProcessReducer,
 });
 
 const store = configureStore({

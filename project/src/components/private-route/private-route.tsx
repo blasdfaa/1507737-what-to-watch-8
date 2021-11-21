@@ -13,7 +13,8 @@ function PrivateRoute(props: PrivateRouteProps): JSX.Element {
 
   return (
     <Route {...restProps}>
-      {authorizationStatus === AuthorizationStatus.Auth ? children : <Redirect to={AppRoutes.Login} />}
+      {authorizationStatus === AuthorizationStatus.Auth ? children :
+        <Redirect to={AppRoutes.Login} />}
     </Route>
   );
 }

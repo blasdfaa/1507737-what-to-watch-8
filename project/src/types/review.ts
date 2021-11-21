@@ -8,5 +8,5 @@ export type MovieReview = {
   user: MovieReviewAuthor;
   rating: number;
   comment: string;
-  date: Date;
+  date: string;
 };

@@ -3,8 +3,8 @@ import { useHistory } from 'react-router';
 import { ApiDataStatus, AppRoutes } from '../../const';
 import useTypedDispatch from '../../hooks/use-typed-dispatch';
 import useTypedSelector from '../../hooks/use-typed-selector';
-import { getFavoriteToggleStatus } from '../../redux/movie/movie.selector';
-import { toggleFavoriteStatus } from '../../redux/movie/movie.slice';
+import { toggleFavoriteMovieFlag } from '../../redux/movie/movie.async';
+import { getFavoriteFlagChangeStatus } from '../../redux/movie/movie.selector';
 
 import { Movie } from '../../types/movie';
 
@@ -17,12 +17,12 @@ function MovieControls({ movie, isFull }: MovieControlsProps): JSX.Element {
   const history = useHistory();
   const dispatch = useTypedDispatch();
 
-  const favoriteMovieToggleStatus = useTypedSelector(getFavoriteToggleStatus);
+  const favoriteFlagChangeStatus = useTypedSelector(getFavoriteFlagChangeStatus);
   // const userAuthStatus = useTypedSelector(getAuthorizationStatus);
 
   const handleChangeFavoriteStatus = async () => {
     if (movie) {
-      dispatch(toggleFavoriteStatus(movie));
+      dispatch(toggleFavoriteMovieFlag(movie));
     }
   };
 
@@ -33,7 +33,7 @@ function MovieControls({ movie, isFull }: MovieControlsProps): JSX.Element {
   };
 
   const isMovieFavorite = movie && movie.isFavorite;
-  const isLoadingToggleStatus = favoriteMovieToggleStatus === ApiDataStatus.Loading;
+  const isLoadingToggleStatus = favoriteFlagChangeStatus === ApiDataStatus.Loading;
 
   return (
     <div className="film-card__buttons">

@@ -11,18 +11,17 @@ type ErrorAlertProps = {
 
 const rootNode = document.getElementById('root');
 
-function ErrorAlert(props: ErrorAlertProps): JSX.Element {
-  const { children } = props;
+function ErrorAlert({ children }: ErrorAlertProps): JSX.Element {
 
   React.useEffect(() => {
     // setTimeout(handleCloseAlert, ALERT_CLOSE_DELAY);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return ReactDOM.createPortal(
     <div className="error-alert">
       <button className="error-alert__close-btn">
-        x<span className="visually-hidden">Закрыть окно</span>
+        x
+        <span className="visually-hidden">Закрыть окно</span>
       </button>
       <p className="error-alert__message">{children}</p>
     </div>,

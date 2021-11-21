@@ -22,7 +22,7 @@ function PromoMovieInfo({ movie, full }: PromoMovieInfoProps): JSX.Element {
     <div className={filmWrapClasses}>
       <div className="film-card__info">
         <div className={filmPosterClasses}>
-          <img src={movie?.posterImage} alt="The Grand Budapest Hotel poster" width="218" height="327" />
+          <img src={movie?.posterImage} alt={`${movie?.title}"} poster`} width="218" height="327" />
         </div>
         <div className="film-card__desc">
           <h2 className="film-card__title">{movie?.title}</h2>

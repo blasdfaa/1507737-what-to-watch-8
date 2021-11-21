@@ -4,10 +4,10 @@ import api from '../api';
 import { ActionType, ApiDataStatus, ApiEndpoint, AppRoutes, AuthorizationStatus } from '../../const';
 import { adaptUserDataToClient } from '../../utils/adapters/user-data-adapter';
 import { removeAuthTokenFromStorage, setAuthTokenToStorage } from '../../services/auth-token';
+import { redirectToRouteAction } from './user-process.action';
 
 import type { ApiUserInfo } from '../../types/api';
 import type { AuthUserData, UserInfo } from '../../types/user';
-import { redirectToRouteAction } from './user-process.action';
 
 type userProcessSliceState = {
   authLoadingStatus: ApiDataStatus;

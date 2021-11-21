@@ -1,18 +1,7 @@
 import React from 'react';
-import dayjs from 'dayjs';
-import durationPlugin from 'dayjs/plugin/duration';
 
+import { getRemainingVideoTime } from '../utils/dates/date';
 import useFullscreenStatus from './use-fullscreen-status';
-
-dayjs.extend(durationPlugin);
-
-const SECONDS_IN_HOUR = 3600;
-
-const getRemainingVideoTime = (current: number, duration: number): string => {
-  const remainingTime = dayjs.duration(duration - current, 's');
-
-  return duration > SECONDS_IN_HOUR ? remainingTime.format('HH:mm:ss') : remainingTime.format('mm:ss');
-};
 
 type ReturnType = {
   isPlaying: boolean;
@@ -32,9 +21,24 @@ const useVideoPlayer = (
   const [isPlaying, setPlaying] = React.useState<boolean>(false);
   const [timeProgress, setTimeProgress] = React.useState<number>(0);
   const [videoTime, setVideoTime] = React.useState<number>(0);
-  const [currentVideoTime, setСurrentVideoTime] = React.useState<number>(0);
+  const [currentVideoTime, setCurrentVideoTime] = React.useState<number>(0);
 
   const [isFullScreen, setFullScreen] = useFullscreenStatus(playerElementRef);
+
+  React.useEffect(() => {
+    // Каждые 500мс проверяем состояние готовности видео, если больше 0, то есть есть как минимум метаданные - можно
+    // устанавливать длительность.
+    const timer = setInterval(() => {
+      if (videoElementRef.current !== null) {
+        if (videoElementRef.current.readyState > 0) {
+          const duration = videoElementRef.current.duration;
+
+          setVideoTime(duration);
+          clearInterval(timer);
+        }
+      }
+    }, 500);
+  }, []);
 
   React.useEffect(() => {
     if (videoElementRef.current !== null) {
@@ -61,7 +65,7 @@ const useVideoPlayer = (
 
       progressElement.style.backgroundSize = `${progress}% 100%`;
 
-      setСurrentVideoTime(videoElement.currentTime);
+      setCurrentVideoTime(videoElement.currentTime);
       setTimeProgress(progress);
     }
   };
