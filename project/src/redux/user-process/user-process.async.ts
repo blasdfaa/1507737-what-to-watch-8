@@ -22,7 +22,6 @@ export const checkAuthStatus = createAsyncThunk<UserInfo, void, { rejectValue: s
     } catch (e) {
       const errorMessage = (e as AxiosError).message;
 
-      toast.error(ErrorMessage.CheckAuthStatus);
       return rejectWithValue(errorMessage);
     }
   },
