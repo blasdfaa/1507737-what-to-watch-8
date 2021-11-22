@@ -1,9 +1,9 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
 import { redirect } from './middlewares/redirect';
+import userProcessReducer from './user-process/user-process.slice';
 import movieReducer from './movie/movie.slice';
 import reviewReducer from './review/review.slice';
-import userProcessReducer from './user-process/user-process.slice';
 
 const rootReducer = combineReducers({
   MOVIES: movieReducer,

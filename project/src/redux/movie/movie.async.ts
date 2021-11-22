@@ -1,40 +1,98 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import toast from 'react-hot-toast';
 
 import api from '../api';
-import { ActionType, ApiEndpoint, AppRoutes, AuthorizationStatus } from '../../const';
+import { ActionType, ApiEndpoint, AppRoutes, AuthorizationStatus, ErrorMessage } from '../../const';
 import { adaptMovieDataToClient } from '../../utils/adapters/movie-adapter';
-import { updateMovie } from './movie.slice';
+import { updateMovie } from './movie.action';
 import { redirectToRouteAction } from '../user-process/user-process.action';
 
+import type { AxiosError } from 'axios';
 import type { RootState } from '../store';
 import type { ApiMovieData } from '../../types/api';
 import type { Movie } from '../../types/movie';
 
 const NOT_AUTHORIZED_ERROR_MESSAGE = 'To add a movie to your favorites, you need to log in';
 
-export const fetchAllMovies = createAsyncThunk<Movie[]>(ActionType.FetchAllMovies, async () => {
-  const { data } = await api.get<ApiMovieData[]>(ApiEndpoint.Movies);
+export const fetchAllMovies = createAsyncThunk<Movie[], void, { rejectValue: string }>(
+  ActionType.FetchAllMovies,
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data } = await api.get<ApiMovieData[]>(ApiEndpoint.Movies);
 
-  return data.map((movie) => adaptMovieDataToClient(movie));
-});
+      return data.map((movie) => adaptMovieDataToClient(movie));
+    } catch (e) {
+      const errorMessage = (e as AxiosError).message;
 
-export const fetchFavoriteMovies = createAsyncThunk<Movie[]>(ActionType.FetchFavoriteMovies, async () => {
-  const { data } = await api.get<ApiMovieData[]>(ApiEndpoint.FavoriteMovies);
+      toast.error(ErrorMessage.FetchAllMovies);
+      return rejectWithValue(errorMessage);
+    }
+  },
+);
 
-  return data.map((movie) => adaptMovieDataToClient(movie));
-});
+export const fetchFavoriteMovies = createAsyncThunk<Movie[], void, { rejectValue: string }>(
+  ActionType.FetchFavoriteMovies,
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data } = await api.get<ApiMovieData[]>(ApiEndpoint.FavoriteMovies);
 
-export const fetchPromoMovie = createAsyncThunk<Movie>(ActionType.FetchPromoMovie, async () => {
-  const { data } = await api.get<ApiMovieData>(ApiEndpoint.PromoMovie);
+      return data.map((movie) => adaptMovieDataToClient(movie));
+    } catch (e) {
+      const errorMessage = (e as AxiosError).message;
 
-  return adaptMovieDataToClient(data);
-});
+      toast.error(ErrorMessage.FetchFavoriteMovies);
+      return rejectWithValue(errorMessage);
+    }
+  },
+);
 
-export const fetchMovieById = createAsyncThunk<Movie, number>(ActionType.FetchMovieById, async (movieId) => {
-  const { data } = await api.get<ApiMovieData>(`${ApiEndpoint.Movies}/${movieId}`);
+export const fetchSimilarMovies = createAsyncThunk<Movie[], number, { rejectValue: string }>(
+  ActionType.FetchSimilarMovies,
+  async (movieId, { rejectWithValue }) => {
+    try {
+      const { data } = await api.get<ApiMovieData[]>(`${ApiEndpoint.Movies}/${movieId}/similar`);
 
-  return adaptMovieDataToClient(data);
-});
+      return data.map((movie) => adaptMovieDataToClient(movie));
+    } catch (e) {
+      const errorMessage = (e as AxiosError).message;
+
+      toast.error(ErrorMessage.FetchSimilarMovies);
+      return rejectWithValue(errorMessage);
+    }
+  },
+);
+
+export const fetchMovieById = createAsyncThunk<Movie, number, { rejectValue: string }>(
+  ActionType.FetchMovieById,
+  async (movieId, { rejectWithValue }) => {
+    try {
+      const { data } = await api.get<ApiMovieData>(`${ApiEndpoint.Movies}/${movieId}`);
+
+      return adaptMovieDataToClient(data);
+    } catch (e) {
+      const errorMessage = (e as AxiosError).message;
+
+      toast.error(ErrorMessage.FetchOneMovie);
+      return rejectWithValue(errorMessage);
+    }
+  },
+);
+
+export const fetchPromoMovie = createAsyncThunk<Movie, void, { rejectValue: string }>(
+  ActionType.FetchPromoMovie,
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data } = await api.get<ApiMovieData>(ApiEndpoint.PromoMovie);
+
+      return adaptMovieDataToClient(data);
+    } catch (e) {
+      const errorMessage = (e as AxiosError).message;
+
+      toast.error(ErrorMessage.FetchPromoMovie);
+      return rejectWithValue(errorMessage);
+    }
+  },
+);
 
 export const toggleFavoriteMovieFlag = createAsyncThunk<
   Movie,
@@ -48,10 +106,10 @@ export const toggleFavoriteMovieFlag = createAsyncThunk<
     return rejectWithValue(NOT_AUTHORIZED_ERROR_MESSAGE);
   }
 
-  try {
-    const currentMovie = movie;
-    const isMovieFavorite = currentMovie.isFavorite;
+  const currentMovie = movie;
+  const isMovieFavorite = currentMovie.isFavorite;
 
+  try {
     const { data } = await api.post<ApiMovieData>(
       `${ApiEndpoint.FavoriteMovies}/${currentMovie.id}/${isMovieFavorite ? '0' : '1'}`,
     );
@@ -61,7 +119,9 @@ export const toggleFavoriteMovieFlag = createAsyncThunk<
 
     return adaptedData;
   } catch (e) {
-    // TODO: Вернуть ошибку из axios'a
-    return rejectWithValue('error');
+    const errorMessage = (e as AxiosError).message;
+
+    toast.error(ErrorMessage.ToggleFavoriteMovieFlag);
+    return rejectWithValue(errorMessage);
   }
 });

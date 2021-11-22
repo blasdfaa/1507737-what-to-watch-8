@@ -1,10 +1,11 @@
 import { useHistory } from 'react-router';
 
-import { ApiDataStatus, AppRoutes } from '../../const';
+import { ApiDataStatus, AppRoutes, AuthorizationStatus } from '../../const';
 import useTypedDispatch from '../../hooks/use-typed-dispatch';
 import useTypedSelector from '../../hooks/use-typed-selector';
 import { toggleFavoriteMovieFlag } from '../../redux/movie/movie.async';
 import { getFavoriteFlagChangeStatus } from '../../redux/movie/movie.selector';
+import { getAuthorizationStatus } from '../../redux/user-process/user-process.selector';
 
 import { Movie } from '../../types/movie';
 
@@ -17,8 +18,8 @@ function MovieControls({ movie, isFull }: MovieControlsProps): JSX.Element {
   const history = useHistory();
   const dispatch = useTypedDispatch();
 
+  const authStatus = useTypedSelector(getAuthorizationStatus);
   const favoriteFlagChangeStatus = useTypedSelector(getFavoriteFlagChangeStatus);
-  // const userAuthStatus = useTypedSelector(getAuthorizationStatus);
 
   const handleChangeFavoriteStatus = async () => {
     if (movie) {
@@ -29,6 +30,19 @@ function MovieControls({ movie, isFull }: MovieControlsProps): JSX.Element {
   const handlePlayClick = () => {
     if (movie) {
       history.push(`${AppRoutes.Player}/${movie.id}`);
+    }
+  };
+
+  const handleAddReviewClick = (e: React.SyntheticEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+
+    if (movie) {
+      history.push(`${AppRoutes.Movies}/${movie.id}/review`, {
+        from: {
+          pathname: `${AppRoutes.Movies}/${movie.id}`,
+          movieName: movie.title,
+        },
+      });
     }
   };
 
@@ -51,8 +65,8 @@ function MovieControls({ movie, isFull }: MovieControlsProps): JSX.Element {
         </svg>
         <span>My list</span>
       </button>
-      {isFull && (
-        <a href="add-review.html" className="btn film-card__button">
+      {authStatus === AuthorizationStatus.Auth && movie && isFull && (
+        <a className="btn film-card__button" href="#!" onClick={(e) => handleAddReviewClick(e)}>
           Add review
         </a>
       )}

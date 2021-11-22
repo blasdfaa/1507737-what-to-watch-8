@@ -6,8 +6,8 @@ import AppHeader from '../../components/app-header/app-header';
 import { AppRoutes, AuthorizationStatus } from '../../const';
 import useTypedDispatch from '../../hooks/use-typed-dispatch';
 import useTypedSelector from '../../hooks/use-typed-selector';
+import { requireLogin } from '../../redux/user-process/user-process.async';
 import { getAuthorizationStatus } from '../../redux/user-process/user-process.selector';
-import { requireLogin } from '../../redux/user-process/user-process.slice';
 
 const EMAIL_VALID_REGEX =
   /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;

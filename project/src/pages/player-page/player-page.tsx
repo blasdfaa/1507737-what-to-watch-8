@@ -26,7 +26,7 @@ function PlayerPage(): JSX.Element {
 
   React.useEffect(() => {
     dispatch(fetchMovieById(+movieId));
-  }, []);
+  }, [dispatch, movieId]);
 
   const {
     isPlaying,

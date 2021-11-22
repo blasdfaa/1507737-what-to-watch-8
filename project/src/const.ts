@@ -33,10 +33,12 @@ export enum AuthorizationStatus {
 
 export enum ActionType {
   FetchAllMovies = 'movie/fetchAllMovies',
+  FetchFavoriteMovies = 'movie/fetchFavoriteMovies',
+  FetchSimilarMovies = 'movie/fetchSimilarMovies',
   FetchMovieById = 'movie/fetchMovieById',
   FetchPromoMovie = 'movie/fetchPromoMovie',
-  FetchFavoriteMovies = 'movie/fetchFavoriteMovie',
   ToggleFavoriteStatus = 'movie/toggleFavoriteStatus',
+  UpdateMovie = 'movie/updateMovie',
 
   CheckAuthStatus = 'user/checkAuthStatus',
   RequireLogin = 'user/requireLogin',
@@ -44,6 +46,8 @@ export enum ActionType {
   RedirectToRoute = 'user/redirectToRoute',
 
   FetchReviews = 'review/fetchReviews',
+  SendReview = 'review/sendReview',
+  ChangeReviewSendingStatus = 'review/changeReviewSendingStatus',
 }
 
 export enum ApiEndpoint {
@@ -65,4 +69,18 @@ export enum ApiDataStatus {
 export enum HttpCode {
   Unauthorized = 401,
   NotFound = 404,
+}
+
+export enum ErrorMessage {
+  FetchAllMovies = 'Error when fetching movies list',
+  FetchFavoriteMovies = 'Error when fetching favorite movies',
+  FetchSimilarMovies = 'Error when fetching similar movies',
+  FetchPromoMovie = 'Error when fetching promo movie',
+  FetchOneMovie = 'Error when fetching movie',
+  ToggleFavoriteMovieFlag = 'Error when change favorite status',
+  FetchReviews = 'Error when fetching review list',
+  SendReview = 'Error when send review',
+  CheckAuthStatus = 'Error when checking authorization status',
+  Login = 'Error when login',
+  Logout = 'Error when logout',
 }

@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import { AppRoutes, AuthorizationStatus } from '../../const';
 import useTypedDispatch from '../../hooks/use-typed-dispatch';
 import useTypedSelector from '../../hooks/use-typed-selector';
+import { requireLogout } from '../../redux/user-process/user-process.async';
 import { getAuthorizationStatus, getUserInfo } from '../../redux/user-process/user-process.selector';
-import { requireLogout } from '../../redux/user-process/user-process.slice';
 
 function UserBlock(): JSX.Element | null {
   const dispatch = useTypedDispatch();

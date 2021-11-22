@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 
 import App from './components/app/app';
 import store from './redux/store';
-import { checkAuthStatus } from './redux/user-process/user-process.slice';
+import { checkAuthStatus } from './redux/user-process/user-process.async';
 
 store.dispatch(checkAuthStatus());
 

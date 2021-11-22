@@ -1,3 +1,5 @@
+import { getReviewPostDate } from '../../utils/dates/date';
+
 import type { MovieReview } from '../../types/review';
 
 function ReviewItem({ user, rating, comment, date }: MovieReview): JSX.Element {
@@ -7,8 +9,8 @@ function ReviewItem({ user, rating, comment, date }: MovieReview): JSX.Element {
         <p className="review__text">{comment}</p>
         <footer className="review__details">
           <cite className="review__author">{user.name}</cite>
-          <time className="review__date" dateTime="2015-11-18">
-            November 18, 2015
+          <time className="review__date" dateTime={date.slice(0, 10)}>
+            {getReviewPostDate(date)}
           </time>
         </footer>
       </blockquote>

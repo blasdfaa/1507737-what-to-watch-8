@@ -6,11 +6,12 @@ import type { Movie } from '../../types/movie';
 
 type MovieInfoDetailsProps = {
   movie: Movie | null;
+  label: string;
 };
 
-function MovieInfoDetails({ movie }: MovieInfoDetailsProps): JSX.Element {
+function MovieInfoDetails({ movie, label }: MovieInfoDetailsProps): JSX.Element {
   return (
-    <div className="film-card__text film-card__row">
+    <div className="film-card__text film-card__row" data-label={label}>
       {movie && (
         <>
           <div className="film-card__text-col">

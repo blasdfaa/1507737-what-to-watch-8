@@ -3,11 +3,13 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ApiDataStatus } from '../../const';
 import {
   fetchAllMovies,
-  fetchFavoriteMovies,
   fetchMovieById,
+  fetchFavoriteMovies,
   fetchPromoMovie,
-  toggleFavoriteMovieFlag,
+  fetchSimilarMovies,
+  toggleFavoriteMovieFlag
 } from './movie.async';
+import { updateMovie } from './movie.action';
 
 import type { Movie, MovieGenre } from '../../types/movie';
 
@@ -20,6 +22,11 @@ type MovieSliceState = {
     error: string | undefined;
   };
   favoriteMovies: {
+    items: Movie[] | [];
+    loadingStatus: ApiDataStatus;
+    error: string | undefined;
+  };
+  similarMovies: {
     items: Movie[] | [];
     loadingStatus: ApiDataStatus;
     error: string | undefined;
@@ -50,6 +57,11 @@ const initialState: MovieSliceState = {
     loadingStatus: ApiDataStatus.Idle,
     error: undefined,
   },
+  similarMovies: {
+    items: [],
+    loadingStatus: ApiDataStatus.Idle,
+    error: undefined,
+  },
   promoMovie: {
     data: null,
     loadingStatus: ApiDataStatus.Idle,
@@ -72,17 +84,6 @@ export const movieSlice = createSlice({
     selectGenre: (state, action: PayloadAction<MovieGenre>) => {
       state.selectedGenre = action.payload;
     },
-    updateMovie: (state, action: PayloadAction<Movie>) => {
-      const newMovie = action.payload;
-      const index = state.allMovies.items.findIndex((movie) => movie.id === newMovie.id);
-
-      if (index !== -1) {
-        state.allMovies.items[index] = newMovie;
-      }
-
-      state.promoMovie.data = newMovie;
-      state.oneMovie.data = newMovie;
-    },
   },
   extraReducers: (builder) => {
     builder
@@ -96,10 +97,14 @@ export const movieSlice = createSlice({
         state.allMovies.items = movies;
         state.allMovies.loadingStatus = ApiDataStatus.Success;
       })
-      .addCase(fetchAllMovies.rejected, (state) => {
+      .addCase(fetchAllMovies.rejected, (state, action) => {
+        const errorMessage = action.payload;
+
         state.allMovies.items = [];
         state.allMovies.loadingStatus = ApiDataStatus.Failed;
+        state.allMovies.error = errorMessage;
       })
+      // Favorite movies
       .addCase(fetchFavoriteMovies.pending, (state) => {
         state.favoriteMovies.loadingStatus = ApiDataStatus.Loading;
       })
@@ -116,6 +121,24 @@ export const movieSlice = createSlice({
         state.favoriteMovies.loadingStatus = ApiDataStatus.Failed;
         state.favoriteMovies.error = errorMessage;
       })
+      // Similar movies
+      .addCase(fetchSimilarMovies.pending, (state) => {
+        state.similarMovies.loadingStatus = ApiDataStatus.Loading;
+      })
+      .addCase(fetchSimilarMovies.fulfilled, (state, action) => {
+        const movies = action.payload;
+
+        state.similarMovies.items = movies;
+        state.similarMovies.loadingStatus = ApiDataStatus.Success;
+        state.similarMovies.error = undefined;
+      })
+      .addCase(fetchSimilarMovies.rejected, (state, action) => {
+        const errorMessage = action.payload;
+
+        state.similarMovies.loadingStatus = ApiDataStatus.Failed;
+        state.similarMovies.error = errorMessage;
+      })
+      // Movie by id
       .addCase(fetchMovieById.pending, (state) => {
         state.oneMovie.data = null;
         state.oneMovie.loadingStatus = ApiDataStatus.Loading;
@@ -133,6 +156,7 @@ export const movieSlice = createSlice({
         state.oneMovie.loadingStatus = ApiDataStatus.Failed;
         state.oneMovie.error = errorMessage;
       })
+      // Promo movie
       .addCase(fetchPromoMovie.pending, (state) => {
         state.promoMovie.loadingStatus = ApiDataStatus.Loading;
       })
@@ -149,6 +173,7 @@ export const movieSlice = createSlice({
         state.promoMovie.loadingStatus = ApiDataStatus.Failed;
         state.promoMovie.error = errorMessage;
       })
+      // Toggle favorite flag
       .addCase(toggleFavoriteMovieFlag.pending, (state) => {
         state.favoriteFlagChangeStatus = ApiDataStatus.Loading;
       })
@@ -160,9 +185,20 @@ export const movieSlice = createSlice({
 
         state.favoriteFlagChangeStatus = ApiDataStatus.Idle;
         state.error = errorMessage;
+      })
+      .addCase(updateMovie, (state, action) => {
+        const newMovie = action.payload;
+        const index = state.allMovies.items.findIndex((movie) => movie.id === newMovie.id);
+
+        if (index !== -1) {
+          state.allMovies.items[index] = newMovie;
+        }
+
+        state.promoMovie.data = newMovie;
+        state.oneMovie.data = newMovie;
       });
   },
 });
 
-export const { selectGenre, updateMovie } = movieSlice.actions;
+export const { selectGenre } = movieSlice.actions;
 export default movieSlice.reducer;

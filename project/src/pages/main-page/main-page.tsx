@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { fetchAllMovies, fetchPromoMovie } from '../../redux/movie/movie.async';
 import { ApiDataStatus } from '../../const';
 import AppHeader from '../../components/app-header/app-header';
 import GenresBar from '../../components/genres-bar/genres-bar';
@@ -13,10 +14,9 @@ import {
   allMoviesSelector,
   getSelectedGenre,
   getAllMoviesLoadingStatus,
-  promoMovieSelector,
+  promoMovieSelector
 } from '../../redux/movie/movie.selector';
 import MoviesList from '../../components/movies-list/movies-list';
-import { fetchAllMovies, fetchPromoMovie } from '../../redux/movie/movie.async';
 import PromoMovieInfo from '../../components/promo-movie-info/promo-movie-info';
 
 import type { Movie, MovieGenre } from '../../types/movie';

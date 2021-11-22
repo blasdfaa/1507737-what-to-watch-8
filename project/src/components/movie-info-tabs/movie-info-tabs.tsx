@@ -11,7 +11,9 @@ function MovieInfoTabs({ children }: MovieInfoProps): JSX.Element {
 
   const tabItems = React.Children.map(
     children,
-    (child: React.ReactElement) => child && (child.props.label as string),
+    (child: React.ReactElement) => child && (
+      child.props.label as string
+    ),
   );
 
   const handleTabClick = (e: React.SyntheticEvent): void => {
@@ -33,7 +35,7 @@ function MovieInfoTabs({ children }: MovieInfoProps): JSX.Element {
               className={`film-nav__item ${activeTab === tab ? 'film-nav__item--active' : ''}`}
               key={`${tab}_info`}
             >
-              <a href="!#" className="film-nav__link" onClick={handleTabClick}>
+              <a href="#!" className="film-nav__link" onClick={handleTabClick}>
                 {tab}
               </a>
             </li>

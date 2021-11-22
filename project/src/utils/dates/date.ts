@@ -12,3 +12,5 @@ export const getRemainingVideoTime = (current: number, duration: number): string
 
   return duration > SECONDS_IN_HOUR ? remainingTime.format('HH:mm:ss') : remainingTime.format('mm:ss');
 };
+
+export const getReviewPostDate = (date: string): string => dayjs(date).format('MMMM D, YYYY');

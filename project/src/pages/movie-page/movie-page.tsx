@@ -10,10 +10,11 @@ import MovieInfoTabs from '../../components/movie-info-tabs/movie-info-tabs';
 import MovieInfoOverview from '../../components/movie-info-overview/movie-info-overview';
 import MovieInfoDetails from '../../components/movie-info-details/movie-info-details';
 import MovieInfoReviews from '../../components/movie-info-reviews/movie-info-reviews';
-import { fetchMovieById } from '../../redux/movie/movie.async';
-import { oneMovieSelector } from '../../redux/movie/movie.selector';
+import { fetchMovieById, fetchSimilarMovies } from '../../redux/movie/movie.async';
+import { oneMovieSelector, similarMoviesSelector } from '../../redux/movie/movie.selector';
 import { fetchReviews } from '../../redux/review/review.async';
 import { reviewSelector } from '../../redux/review/review.selector';
+import MoviesList from '../../components/movies-list/movies-list';
 
 type UseParams = {
   id: string;
@@ -21,15 +22,23 @@ type UseParams = {
 
 function MoviePage(): JSX.Element {
   const { id: movieId } = useParams<UseParams>();
+
   const dispatch = useTypedDispatch();
 
   const movie = useTypedSelector(oneMovieSelector);
+  const similarMovies = useTypedSelector(similarMoviesSelector);
   const reviews = useTypedSelector(reviewSelector);
 
   React.useEffect(() => {
     dispatch(fetchMovieById(+movieId));
     dispatch(fetchReviews(+movieId));
-  }, []);
+    dispatch(fetchSimilarMovies(+movieId));
+
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  }, [dispatch, movieId]);
 
   return (
     <>
@@ -71,7 +80,7 @@ function MoviePage(): JSX.Element {
       <div className="page-content">
         <section className="catalog catalog--like-this">
           <h2 className="catalog__title">More like this</h2>
-          {/* <MoviesList movies={} /> */}
+          <MoviesList movies={similarMovies} />
         </section>
         <footer className="page-footer">
           <div className="logo">
