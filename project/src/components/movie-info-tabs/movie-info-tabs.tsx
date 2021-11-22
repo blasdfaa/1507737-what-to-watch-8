@@ -11,9 +11,7 @@ function MovieInfoTabs({ children }: MovieInfoProps): JSX.Element {
 
   const tabItems = React.Children.map(
     children,
-    (child: React.ReactElement) => child && (
-      child.props.label as string
-    ),
+    (child: React.ReactElement) => child && (child.props.label as string),
   );
 
   const handleTabClick = (e: React.SyntheticEvent): void => {
