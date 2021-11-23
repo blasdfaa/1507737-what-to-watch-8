@@ -1,3 +1,5 @@
+import React from 'react';
+
 export const enableFullscreen = (ref: React.RefObject<HTMLElement | null>): void => {
   if (ref.current !== null) {
     if (ref.current.requestFullscreen) {

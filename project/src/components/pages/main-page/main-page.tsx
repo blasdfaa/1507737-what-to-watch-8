@@ -1,25 +1,25 @@
 import React from 'react';
 
-import { fetchAllMovies, fetchPromoMovie } from '../../redux/movie/movie.async';
-import { ApiDataStatus } from '../../const';
-import AppHeader from '../../components/app-header/app-header';
-import GenresBar from '../../components/genres-bar/genres-bar';
-import UserBlock from '../../components/user-block/user-block';
-import AppFooter from '../../components/app-footer/app-footer';
-import useTypedSelector from '../../hooks/use-typed-selector';
-import useTypedDispatch from '../../hooks/use-typed-dispatch';
-import { selectGenre } from '../../redux/movie/movie.slice';
+import { fetchAllMovies, fetchPromoMovie } from '../../../redux/movie/movie.async';
+import { ApiDataStatus } from '../../../const';
+import AppHeader from '../../app-header/app-header';
+import GenresBar from '../../genres-bar/genres-bar';
+import UserBlock from '../../user-block/user-block';
+import AppFooter from '../../app-footer/app-footer';
+import useTypedSelector from '../../../hooks/use-typed-selector';
+import useTypedDispatch from '../../../hooks/use-typed-dispatch';
+import { selectGenre } from '../../../redux/movie/movie.slice';
 import {
   filteredMoviesByGenreSelector,
   allMoviesSelector,
   getSelectedGenre,
   getAllMoviesLoadingStatus,
   promoMovieSelector
-} from '../../redux/movie/movie.selector';
-import MoviesList from '../../components/movies-list/movies-list';
-import PromoMovieInfo from '../../components/promo-movie-info/promo-movie-info';
+} from '../../../redux/movie/movie.selector';
+import MoviesList from '../../movies-list/movies-list';
+import PromoMovieInfo from '../../promo-movie-info/promo-movie-info';
 
-import type { Movie, MovieGenre } from '../../types/movie';
+import type { Movie, MovieGenre } from '../../../types/movie';
 
 const INITIAL_SHOWED_MOVIES_COUNT = 8;
 const SHOWED_MOVIES_STEP = 8;

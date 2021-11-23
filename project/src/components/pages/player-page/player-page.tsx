@@ -1,12 +1,12 @@
 import React from 'react';
 import { useHistory, useParams } from 'react-router';
 
-import { ApiDataStatus } from '../../const';
-import useTypedDispatch from '../../hooks/use-typed-dispatch';
-import useTypedSelector from '../../hooks/use-typed-selector';
-import useVideoPlayer from '../../hooks/use-video-player';
-import { fetchMovieById } from '../../redux/movie/movie.async';
-import { getOneMovieLoadingStatus, oneMovieSelector } from '../../redux/movie/movie.selector';
+import { ApiDataStatus } from '../../../const';
+import useTypedDispatch from '../../../hooks/use-typed-dispatch';
+import useTypedSelector from '../../../hooks/use-typed-selector';
+import useVideoPlayer from '../../../hooks/use-video-player';
+import { fetchMovieById } from '../../../redux/movie/movie.async';
+import { getOneMovieLoadingStatus, oneMovieSelector } from '../../../redux/movie/movie.selector';
 
 type UseParams = {
   id: string;
@@ -84,10 +84,10 @@ function PlayerPage(): JSX.Element {
           <div className="player__time-value">{remainingVideoTime}</div>
         </div>
         <div className="player__controls-row">
-          <button type="button" className="player__play" onClick={togglePlay} disabled={!!isSourceLoading}>
+          <button type="button" className="player__play" onClick={togglePlay} disabled={isSourceLoading}>
             <svg viewBox="0 0 19 19" width="19" height="19">
-              {isPlaying && <use xlinkHref="#pause"></use>}
-              {!isPlaying && <use xlinkHref="#play-s"></use>}
+              {isPlaying && <use xlinkHref="#pause" />}
+              {!isPlaying && <use xlinkHref="#play-s" />}
             </svg>
             <span>Play</span>
           </button>
@@ -95,7 +95,7 @@ function PlayerPage(): JSX.Element {
 
           <button type="button" className="player__full-screen" onClick={toggleFullscreen}>
             <svg viewBox="0 0 27 27" width="27" height="27">
-              <use xlinkHref="#full-screen"></use>
+              <use xlinkHref="#full-screen" />
             </svg>
             <span>Full screen</span>
           </button>

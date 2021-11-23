@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import AppHeader from '../../components/app-header/app-header';
+import AppHeader from '../../app-header/app-header';
 
 import './error-page.css';
 

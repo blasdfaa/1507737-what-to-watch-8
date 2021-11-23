@@ -2,19 +2,19 @@ import React from 'react';
 import { Redirect, useParams } from 'react-router';
 import toast from 'react-hot-toast';
 
-import AppHeader from '../../components/app-header/app-header';
-import Breadcrumbs from '../../components/breadcrumbs/breadcrumbs';
-import UserBlock from '../../components/user-block/user-block';
-import { ApiDataStatus, AppRoutes, AuthorizationStatus, ErrorMessage } from '../../const';
-import useTypedDispatch from '../../hooks/use-typed-dispatch';
-import useTypedSelector from '../../hooks/use-typed-selector';
-import { getAuthorizationStatus } from '../../redux/user-process/user-process.selector';
-import { fetchMovieById } from '../../redux/movie/movie.async';
-import { oneMovieSelector } from '../../redux/movie/movie.selector';
-import InputStars from '../../components/input-stars/input-stars';
-import useInputStars from '../../hooks/use-input-stars';
-import { getReviewSendingStatus } from '../../redux/review/review.selector';
-import { sendReview } from '../../redux/review/review.async';
+import AppHeader from '../../app-header/app-header';
+import Breadcrumbs from '../../breadcrumbs/breadcrumbs';
+import UserBlock from '../../user-block/user-block';
+import { ApiDataStatus, AppRoutes, AuthorizationStatus, ErrorMessage } from '../../../const';
+import useTypedDispatch from '../../../hooks/use-typed-dispatch';
+import useTypedSelector from '../../../hooks/use-typed-selector';
+import { getAuthorizationStatus } from '../../../redux/user-process/user-process.selector';
+import { fetchMovieById } from '../../../redux/movie/movie.async';
+import { oneMovieSelector } from '../../../redux/movie/movie.selector';
+import InputStars from '../../input-stars/input-stars';
+import useInputStars from '../../../hooks/use-input-stars';
+import { getReviewSendingStatus } from '../../../redux/review/review.selector';
+import { sendReview } from '../../../redux/review/review.async';
 
 const SENDING_REVIEW_MESSAGE = 'Sending...';
 const SEND_SUCCESS_REVIEW_MESSAGE = 'Review sending success';
@@ -66,7 +66,7 @@ function AddReviewPage(): JSX.Element {
 
     const message = dispatch(sendReview(newReview)).unwrap();
 
-    toast.promise(message, {
+    await toast.promise(message, {
       loading: SENDING_REVIEW_MESSAGE,
       success: SEND_SUCCESS_REVIEW_MESSAGE,
       error: ErrorMessage.SendReview,

@@ -4,13 +4,13 @@ import { Toaster } from 'react-hot-toast';
 import { AppRoutes, AuthorizationStatus, ERROR_404_MESSAGE } from '../../const';
 import PrivateRoute from '../private-route/private-route';
 import browserHistory from '../../services/browser-history';
-import AddReviewPage from '../../pages/add-review-page/add-review-page';
-import ErrorPage from '../../pages/error-page/error-page';
-import LoginPage from '../../pages/login-page/login-page';
-import MainPage from '../../pages/main-page/main-page';
-import MoviePage from '../../pages/movie-page/movie-page';
-import MyListPage from '../../pages/my-list-page/my-list-page';
-import PlayerPage from '../../pages/player-page/player-page';
+import AddReviewPage from '../pages/add-review-page/add-review-page';
+import ErrorPage from '../pages/error-page/error-page';
+import LoginPage from '../pages/login-page/login-page';
+import MainPage from '../pages/main-page/main-page';
+import MoviePage from '../pages/movie-page/movie-page';
+import MyListPage from '../pages/my-list-page/my-list-page';
+import PlayerPage from '../pages/player-page/player-page';
 
 import SvgSprite from '../svg-sprite/svg-sprite';
 

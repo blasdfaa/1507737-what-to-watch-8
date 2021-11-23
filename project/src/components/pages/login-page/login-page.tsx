@@ -2,12 +2,13 @@
 import React from 'react';
 import { Redirect } from 'react-router';
 
-import AppHeader from '../../components/app-header/app-header';
-import { AppRoutes, AuthorizationStatus } from '../../const';
-import useTypedDispatch from '../../hooks/use-typed-dispatch';
-import useTypedSelector from '../../hooks/use-typed-selector';
-import { requireLogin } from '../../redux/user-process/user-process.async';
-import { getAuthorizationStatus } from '../../redux/user-process/user-process.selector';
+import AppHeader from '../../app-header/app-header';
+import { AppRoutes, AuthorizationStatus } from '../../../const';
+import useTypedDispatch from '../../../hooks/use-typed-dispatch';
+import useTypedSelector from '../../../hooks/use-typed-selector';
+import { requireLogin } from '../../../redux/user-process/user-process.async';
+import { getAuthorizationStatus } from '../../../redux/user-process/user-process.selector';
+import AppFooter from '../../app-footer/app-footer';
 
 const EMAIL_VALID_REGEX =
   /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -97,19 +98,7 @@ function LoginPage(): JSX.Element | null {
           </form>
         </div>
 
-        <footer className="page-footer">
-          <div className="logo">
-            <a href="main.html" className="logo__link logo__link--light">
-              <span className="logo__letter logo__letter--1">W</span>
-              <span className="logo__letter logo__letter--2">T</span>
-              <span className="logo__letter logo__letter--3">W</span>
-            </a>
-          </div>
-
-          <div className="copyright">
-            <p>© 2019 What to watch Ltd.</p>
-          </div>
-        </footer>
+        <AppFooter />
       </div>
     </>
   );

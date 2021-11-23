@@ -16,9 +16,8 @@ export const checkAuthStatus = createAsyncThunk<UserInfo, void, { rejectValue: s
   async (_, { rejectWithValue }) => {
     try {
       const { data } = await api.get<ApiUserInfo>(ApiEndpoint.Login);
-      const adaptedData = adaptUserDataToClient(data);
 
-      return adaptedData;
+      return adaptUserDataToClient(data);
     } catch (e) {
       const errorMessage = (e as AxiosError).message;
 

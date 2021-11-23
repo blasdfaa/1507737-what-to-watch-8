@@ -1,20 +1,20 @@
 import React from 'react';
 import { useParams } from 'react-router';
 
-import AppHeader from '../../components/app-header/app-header';
-import MovieControls from '../../components/movie-controls/movie-controls';
-import UserBlock from '../../components/user-block/user-block';
-import useTypedDispatch from '../../hooks/use-typed-dispatch';
-import useTypedSelector from '../../hooks/use-typed-selector';
-import MovieInfoTabs from '../../components/movie-info-tabs/movie-info-tabs';
-import MovieInfoOverview from '../../components/movie-info-overview/movie-info-overview';
-import MovieInfoDetails from '../../components/movie-info-details/movie-info-details';
-import MovieInfoReviews from '../../components/movie-info-reviews/movie-info-reviews';
-import { fetchMovieById, fetchSimilarMovies } from '../../redux/movie/movie.async';
-import { oneMovieSelector, similarMoviesSelector } from '../../redux/movie/movie.selector';
-import { fetchReviews } from '../../redux/review/review.async';
-import { reviewSelector } from '../../redux/review/review.selector';
-import MoviesList from '../../components/movies-list/movies-list';
+import AppHeader from '../../app-header/app-header';
+import MovieControls from '../../movie-controls/movie-controls';
+import UserBlock from '../../user-block/user-block';
+import useTypedDispatch from '../../../hooks/use-typed-dispatch';
+import useTypedSelector from '../../../hooks/use-typed-selector';
+import MovieInfoTabs from '../../movie-info-tabs/movie-info-tabs';
+import MovieInfoOverview from '../../movie-info-overview/movie-info-overview';
+import MovieInfoDetails from '../../movie-info-details/movie-info-details';
+import MovieInfoReviews from '../../movie-info-reviews/movie-info-reviews';
+import { fetchMovieById, fetchSimilarMovies } from '../../../redux/movie/movie.async';
+import { oneMovieSelector, similarMoviesSelector } from '../../../redux/movie/movie.selector';
+import { fetchReviews } from '../../../redux/review/review.async';
+import { reviewSelector } from '../../../redux/review/review.selector';
+import MoviesList from '../../movies-list/movies-list';
 
 type UseParams = {
   id: string;

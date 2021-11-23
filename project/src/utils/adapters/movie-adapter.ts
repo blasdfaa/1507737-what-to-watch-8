@@ -20,23 +20,3 @@ export const adaptMovieDataToClient = (movie: ApiMovieData): Movie => ({
   releasedYear: movie.released,
   isFavorite: movie['is_favorite'],
 });
-
-export const adaptMovieDataToServer = (movie: Movie): ApiMovieData => ({
-  id: movie.id,
-  name: movie.title,
-  'poster_image': movie.posterImage,
-  'preview_image': movie.previewImage,
-  'background_image': movie.backgroundImage,
-  'background_color': movie.backgroundColor,
-  'video_link': movie.videoLink,
-  'preview_video_link': movie.previewVideoLink,
-  description: movie.description,
-  rating: movie.rating,
-  'scores_count': movie.scoresCount,
-  director: movie.director,
-  starring: movie.starring,
-  'run_time': movie.runTime,
-  genre: movie.genre,
-  released: movie.releasedYear,
-  'is_favorite': movie.isFavorite,
-});

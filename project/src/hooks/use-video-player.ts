@@ -3,6 +3,8 @@ import React from 'react';
 import { getRemainingVideoTime } from '../utils/dates/date';
 import useFullscreenStatus from './use-fullscreen-status';
 
+const READY_STATE_TIMER_DURATION = 500;
+
 type ReturnType = {
   isPlaying: boolean;
   timeProgress: number;
@@ -37,7 +39,7 @@ const useVideoPlayer = (
           clearInterval(timer);
         }
       }
-    }, 500);
+    }, READY_STATE_TIMER_DURATION);
   }, []);
 
   React.useEffect(() => {
@@ -78,7 +80,7 @@ const useVideoPlayer = (
       const min = +e.target.min;
       const max = +e.target.max;
 
-      videoElement.currentTime = (videoElementRef.current.duration / 100) * manualChange;
+      videoElement.currentTime = (videoElement.duration / 100) * manualChange;
       progressElement.style.backgroundSize = `${((manualChange - min) * 100) / (max - min)}% 100%`;
 
       setTimeProgress(manualChange);

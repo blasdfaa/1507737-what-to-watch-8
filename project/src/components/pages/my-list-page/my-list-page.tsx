@@ -1,16 +1,16 @@
 import React from 'react';
 import { Redirect } from 'react-router';
 
-import { AppRoutes, AuthorizationStatus } from '../../const';
-import AppFooter from '../../components/app-footer/app-footer';
-import AppHeader from '../../components/app-header/app-header';
-import MoviesList from '../../components/movies-list/movies-list';
-import UserBlock from '../../components/user-block/user-block';
-import useTypedDispatch from '../../hooks/use-typed-dispatch';
-import useTypedSelector from '../../hooks/use-typed-selector';
-import { getAuthorizationStatus } from '../../redux/user-process/user-process.selector';
-import { favoriteMoviesSelector } from '../../redux/movie/movie.selector';
-import { fetchFavoriteMovies } from '../../redux/movie/movie.async';
+import { AppRoutes, AuthorizationStatus } from '../../../const';
+import AppFooter from '../../app-footer/app-footer';
+import AppHeader from '../../app-header/app-header';
+import MoviesList from '../../movies-list/movies-list';
+import UserBlock from '../../user-block/user-block';
+import useTypedDispatch from '../../../hooks/use-typed-dispatch';
+import useTypedSelector from '../../../hooks/use-typed-selector';
+import { getAuthorizationStatus } from '../../../redux/user-process/user-process.selector';
+import { favoriteMoviesSelector } from '../../../redux/movie/movie.selector';
+import { fetchFavoriteMovies } from '../../../redux/movie/movie.async';
 
 function MyListPage(): JSX.Element {
   const dispatch = useTypedDispatch();
