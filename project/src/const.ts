@@ -1,5 +1,4 @@
 export const ERROR_404_MESSAGE = 'Page not found';
-export const FETCH_MOVIES_ERROR_MESSAGE = 'Error loading movies';
 
 export const genresNames = [
   'All genres',
@@ -80,7 +79,6 @@ export enum ErrorMessage {
   ToggleFavoriteMovieFlag = 'Error when change favorite status',
   FetchReviews = 'Error when fetching review list',
   SendReview = 'Error when send review',
-  CheckAuthStatus = 'Error when checking authorization status',
   Login = 'Error when login',
   Logout = 'Error when logout',
 }

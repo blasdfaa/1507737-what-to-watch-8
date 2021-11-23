@@ -27,10 +27,4 @@ export type MovieCard = {
   previewVideoLink: string;
 };
 
-export type videoPlayerState = {
-  isPlaying: boolean;
-  isFullScreen: boolean;
-  progress: number;
-};
-
 export type MovieGenre = typeof genresNames[number];

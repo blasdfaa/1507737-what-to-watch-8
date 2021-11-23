@@ -19,8 +19,6 @@ const oneMovie = (state: RootState) => all(state).oneMovie;
 // get
 export const getSelectedGenre = (state: RootState): MovieGenre => all(state).selectedGenre;
 export const getAllMoviesLoadingStatus = (state: RootState): ApiDataStatus => allMovies(state).loadingStatus;
-export const getFavoriteMoviesLoadingStatus = (state: RootState): ApiDataStatus =>
-  favoriteMovies(state).loadingStatus;
 export const getOneMovieLoadingStatus = (state: RootState): ApiDataStatus => oneMovie(state).loadingStatus;
 export const getFavoriteFlagChangeStatus = (state: RootState): ApiDataStatus =>
   all(state).favoriteFlagChangeStatus;
