@@ -9,9 +9,7 @@ type ErrorPageProps = {
   text: string;
 };
 
-function ErrorPage(props: ErrorPageProps): JSX.Element {
-  const { code, text } = props;
-
+function ErrorPage({ code, text }: ErrorPageProps): JSX.Element {
   return (
     <div className="error-page">
       <AppHeader className="error-page__head">
